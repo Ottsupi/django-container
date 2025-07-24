@@ -1,71 +1,76 @@
 # Django Container
 
 ## Features
-* Django 5.2
-* Postgres 17
-* Gunicorn 23
 
-## Learnings
+-   Django 5.2
+-   Postgres 17
+-   Gunicorn 23
 
-### Setting up HTTPS for localhost
-1. Generate key
-    ``` bash
-    openssl genrsa -out localhost.key 2048
+# Learnings
+
+## Setting up SSL
+
+1. Genarate certificate and key
+2. Configure the web server to use them
+3. Add certificate to trust stores
+4. Comply with the ever-changing specs
+
+## Generate certificate and key
+
+0. `cd` into `./src/nginx`
+
+1. Establish a private _Certificate Authority (CA)_
+    ```sh-session
+    openssl req -x509 -nodes \
+        -newkey RSA:2048 \
+        -keyout root_ca.key \
+        -days 365 \
+        -out root_ca.crt \
+        -config root_ca.conf \
+        -extensions 'v3_req'
     ```
-2. Genarate cert
-    ``` .conf
-    # ssl.conf
+    * Output
+        * `root_ca.crt`
+        * `root_ca.key`
 
-    [req]
-    distinguished_name = req_distinguished_name
-    x509_extensions = v3_req
-    prompt = no
-
-    [req_distinguished_name]
-    C = 2-letter Country Code
-    ST = State
-    L = City
-    O = Organization
-    OU = Department
-    CN = Common Name
-
-    [v3_req]
-    basicConstraints = critical,CA:true
-    subjectKeyIdentifier = hash
-    authorityKeyIdentifier = keyid:always,issuer
-    keyUsage = critical, cRLSign, digitalSignature, keyCertSign
-    extendedKeyUsage = serverAuth
-    subjectAltName = @alt_names
-
-    [alt_names]
-    DNS.1 = localhost
-    DNS.2 = 127.0.0.1
+2. Create a private key and _Certificate Signing Request (CSR)_
+    ```sh-session
+    openssl req -nodes \
+        -newkey rsa:2048 \
+        -keyout server.key \
+        -out server.csr \
+        -config server.conf \
+        -extensions 'v3_req'
     ```
-    ``` bash
-    openssl req -x509 -nodes -days 1024 /
-            -newkey rsa:2048 /
-            -keyout localhost.key /
-            -out localhost.crt /
-            -config ssl.conf /
-            -extensions 'v3_req'
-    ```
-3. Configure web server to use them
-4. Add certificate to trust stores
-5. Account for new requirements and fix them
+    * Output
+        * `server.csr`
+        * `server.key`
 
-### Troubleshooting localhost SSL errors
-* If using containers, make sure port `443` is exposed
-* `ERR_SSL_KEY_USAGE_INCOMPATIBLE` means that Key Usage must contain "Digital Signature, Certificate Signing, Off-line CRL Signing, CRL Signing (86)"
-    * https://support.google.com/chrome/thread/239508594?hl=en&msgid=245153877
-    * https://superuser.com/a/738644
-    * https://stackoverflow.com/q/15123152
-* Make sure to add certificate to trust stores
-    * For windows:
-        1. Run `certlm`
-        2. Under Certificates - Local Computer, right click on Personal
-        3. All tasks > Import...
-        4. Import certificate
-    * For chrome:
-        1. Go to Settings > Privacy and Security > Security > Manage Certificates
-        2. Local Certificates > Installed by you
-        3. Import certificate
+3. Generate a certificate issued by `root_ca`
+    ```sh-session
+    openssl x509 -req \
+        -CA root_ca.crt \
+        -CAkey root_ca.key \
+        -in server.csr \
+        -out server.crt \
+        -days 365 \
+        -extfile server.conf \
+        -extensions 'v3_req' \
+        -CAcreateserial
+    ```
+    * Output
+        * `server.crt`
+        * `server.srl`
+
+## Troubleshooting localhost SSL errors
+
+-   If using containers, make sure port `443` is exposed
+-   Make sure to add certificate to trust stores
+-   Make sure to use different Distinguished Names for the `root_ca` and `server` certificates
+-   Some browsers may complain about a certificate signed by a well-known certificate authority, while other browsers may accept the certificate without issues. See SSL certificate chains section in the NGINX docs: https://nginx.org/en/docs/http/configuring_https_servers.html
+-   `ERR_SSL_KEY_USAGE_INCOMPATIBLE`
+    -   `keyUsage` must have `critical, digitalSignature, keyEncipherment`
+    -   https://superuser.com/a/738644
+    -   https://stackoverflow.com/q/15123152
+-   `SEC_ERROR_INADEQUATE_KEY_USAGE`
+    -   `keyUsage` must have `critical, digitalSignature, cRLSign, keyCertSign`

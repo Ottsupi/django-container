@@ -3,3 +3,16 @@ services:
     build: .
     volumes:
       - ".:/develop"
+    env_file:
+      - ./src/.env
+    depends_on:
+      - database
+  database:
+    image: postgres:17
+    env_file:
+      - ./src/.env
+    volumes:
+      - database_data:/var/lib/postgresql/data
+
+volumes:
+  database_data: {}

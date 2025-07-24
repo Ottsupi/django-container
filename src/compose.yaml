@@ -1,0 +1,30 @@
+services:
+  server:
+    build: .
+    volumes:
+      - ".:/develop"
+    env_file:
+      - .env
+    depends_on:
+      - database
+  database:
+    image: postgres:17
+    env_file:
+      - .env
+    volumes:
+      - database_data:/var/lib/postgresql/data
+  reverse-proxy:
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+      - ${HTTPS_PORT}:${HTTPS_PORT}
+    depends_on:
+      - server
+
+volumes:
+  database_data: {}

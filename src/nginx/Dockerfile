@@ -4,6 +4,6 @@ WORKDIR /etc/nginx/templates
 
 COPY default.conf.template /etc/nginx/templates/default.conf.template
 
-COPY localhost.crt /etc/ssl/private/localhost.crt
+COPY server.crt /etc/ssl/certs/server.crt
 
-COPY localhost.key /etc/ssl/private/localhost.key
+COPY server.key /etc/ssl/private/server.key

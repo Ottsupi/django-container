@@ -1,6 +1,12 @@
+# Static files
+src/static/*
+!src/static/.gitkeep
+
 # Keys and certificates
 *.key
 *.crt
+*.srl
+*.csr
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

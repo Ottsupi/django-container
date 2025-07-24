@@ -2,17 +2,34 @@ services:
   server:
     build: .
     volumes:
-      - ".:/develop"
+      - ./static:/code/static
     env_file:
       - .env
+    entrypoint: ["./entrypoint.sh"]
     depends_on:
-      - database
+      database:
+        condition: service_healthy
+        restart: true
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      start_period: 30s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
   database:
     image: postgres:17
     env_file:
       - .env
     volumes:
       - database_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      start_period: 30s
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
   reverse-proxy:
     restart: always
     build:
@@ -24,7 +41,9 @@ services:
       - ${NGINX_PORT}:${NGINX_PORT}
       - ${HTTPS_PORT}:${HTTPS_PORT}
     depends_on:
-      - server
+      server:
+        condition: service_healthy
+        restart: true
 
 volumes:
   database_data: {}

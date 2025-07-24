@@ -1,3 +1,7 @@
+# Keys and certificates
+*.key
+*.crt
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

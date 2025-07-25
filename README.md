@@ -74,3 +74,9 @@
     -   https://stackoverflow.com/q/15123152
 -   `SEC_ERROR_INADEQUATE_KEY_USAGE`
     -   `keyUsage` must have `critical, digitalSignature, cRLSign, keyCertSign`
+
+## Tips for learning NGINX
+
+-   Study the config
+-   Know where to put things
+-   Learn how to point to things

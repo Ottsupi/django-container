@@ -1,9 +1,9 @@
 FROM nginx
 
-WORKDIR /etc/nginx/templates
+COPY /nginx/server.crt /etc/ssl/certs/server.crt
 
-COPY default.conf.template /etc/nginx/templates/default.conf.template
+COPY /nginx/server.key /etc/ssl/private/server.key
 
-COPY server.crt /etc/ssl/certs/server.crt
+COPY /nginx/default.conf.template /etc/nginx/templates/default.conf.template
 
-COPY server.key /etc/ssl/private/server.key
+COPY /static /var/www/html/static

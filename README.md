@@ -5,6 +5,20 @@
 -   Django 5.2
 -   Postgres 17
 -   Gunicorn 23
+-   Nginx
+
+## How to use
+
+1. Rename the `src/.env.sample` file to `.env`
+2. Follow the steps from "Generate certificate and key" found below
+3. For development, use docker compose in the root directory
+4. For deployment, use docker compose in the `./src` directory
+
+## Folder structure
+
+* Everything needed for the app to be deployed is found inside the `./src` directory
+* Everything else outside that is needed for development
+
 
 # Learnings
 

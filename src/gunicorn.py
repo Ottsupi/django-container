@@ -1,8 +1,8 @@
 import os
 
-PORT = os.environ.get('SERVER_ PORT', default='8080')
-HOST = '0.0.0.0'
-bind = f'{HOST}:{PORT}'
+PORT = os.environ.get("SERVER_ PORT", default="8080")
+HOST = "0.0.0.0"
+bind = f"{HOST}:{PORT}"
 
 workers = 2
 threads = 4

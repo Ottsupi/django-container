@@ -7,16 +7,22 @@
 -   Gunicorn 23
 -   Nginx
 
-## How to use
+## How to use in development
 
-1. Rename the `src/.env.sample` file to `.env`
-2. Follow the steps from "Generate certificate and key" found below
-3. For development, use docker compose in the root directory
-4. For deployment, use docker compose in the `./src` directory
+1. Rename the `.env.sample` file to `.env` found in `src/`
+2. Open in VS Code using Dev Containers
+3. Start development
+* In case pylance does not work, do VS Code "reload window"
+    after installing the Python extensions
+
+## How to deploy locally with SSL
+1. Rename the `.env.sample` file to `.env` found in `src/`
+2. Follow the steps below to generate the SSL certificate
+3. Run `docker compose up` in `src/`
 
 ## Folder structure
 
-* Everything needed for the app to be deployed is found inside the `./src` directory
+* Everything needed for the app to be deployed is found inside `src/`
 * Everything else outside that is needed for development
 
 

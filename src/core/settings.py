@@ -16,6 +16,8 @@ from pathlib import Path
 
 # Reads environment
 env = environ.Env()
+APP_ENV = env("ENVIRONMENT")
+APP_ENV_IS_LOCAL = APP_ENV == "local"
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+if APP_ENV_IS_LOCAL:
+    DEBUG = True
 
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
 

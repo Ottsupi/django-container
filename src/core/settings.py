@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 import environ
+import socket
 
 from pathlib import Path
 
@@ -47,8 +48,12 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # Local apps
-    "apps.app"
+    "apps.app",
 ]
+
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+    INSTALLED_APPS.append("django_extensions")
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -59,6 +64,9 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+if DEBUG:
+    MIDDLEWARE.append("debug_toolbar.middleware.DebugToolbarMiddleware")
 
 ROOT_URLCONF = "core.urls"
 
@@ -148,3 +156,12 @@ STATIC_ROOT = BASE_DIR / "static"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Debug Toolbar
+# https://django-debug-toolbar.readthedocs.io/en/latest/installation.html#internal-ips
+
+INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
+if DEBUG:
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS += [".".join([*ip.split(".")[:-1], "1"]) for ip in ips]

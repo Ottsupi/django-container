@@ -4,7 +4,7 @@ gunicorn==23.0.*
 argon2-cffi==25.1.*
 
 # Database
-psycopg[binary]==3.2.*
+psycopg[c]==3.2.*
 
 # Dev
 django-debug-toolbar==6.0.*

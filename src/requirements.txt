@@ -5,8 +5,3 @@ argon2-cffi==25.1.*
 
 # Database
 psycopg[c]==3.2.*
-
-# Dev
-django-debug-toolbar==6.0.*
-django-extensions==4.1.*
-werkzeug==3.1.*

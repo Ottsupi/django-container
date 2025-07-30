@@ -178,7 +178,10 @@ LOGGING = {
             "format": "[%(asctime)s] [%(name)s:%(lineno)s] %(levelname)s: %(message)s",
             "datefmt": "%Y-%m-%dT%H:%M:%S%z",
         },
-        "simple": {"format": "[%(name)s] %(levelname)s: %(message)s"},
+        "simple": {
+            "format": "[%(asctime)s] [%(name)s] %(levelname)s: %(message)s",
+            "datefmt": "%H:%M:%S",
+        },
     },
     "handlers": {
         "file": {

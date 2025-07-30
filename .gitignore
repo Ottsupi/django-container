@@ -1,3 +1,7 @@
+# Logs
+src/logs/*
+!src/logs/.gitkeep
+
 # Static files
 src/static/*
 !src/static/.gitkeep

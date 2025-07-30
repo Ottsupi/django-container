@@ -11,7 +11,7 @@ services:
         condition: service_healthy
         restart: true
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health_check"]
       start_period: 30s
       interval: 10s
       timeout: 10s

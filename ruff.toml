@@ -1,0 +1,91 @@
+line-length = 120
+target-version = 'py312'
+
+extend-exclude = [
+    'migrations/*',
+    'manage.py',
+    'wsgi.py',
+    'asgi.py'
+]
+
+
+[lint]
+# Read more here https://docs.astral.sh/ruff/rules/
+select = [
+    'ERA',          # eradicate
+    'FLY',          # flynt
+    'I',            # isort
+    'N',            # pep8-naming
+    'E', 'W',       # pycodestyle
+    'D',            # pydocstyle
+    'F',            # pyflakes
+    'PL',           # pylint
+    'UP',           # pyupgrade
+    'PERF',         # perflint
+    'FURB',         # refurb
+    'RUF',          # ruff
+    'TRY',          # tryceratops
+    'S',            # flake8-bandit
+    'BLE',          # flake8-blind-except
+    'FBT',          # flake8-boolean-trap
+    'B',            # flake8-bugbear
+    'A',            # flake8-builtins
+    'COM',          # flake8-comma
+    'C4',           # flake8-comprehensions
+    'DTZ',          # flake8-datetimez
+    'DJ',           # flake8-django
+    'EM',           # flake8-errmsg
+    'FIX',          # flake8-fixme
+    'INT',          # flake8-gettext
+    'ICN',          # flake8-import-conventions
+    'LOG',          # flake8-logging
+    'G',            # flake8-logging-format
+    'INP',          # flake8-no-pep420
+    'PIE',          # flake8-pie
+    'T20',          # flake8-print
+    'Q',            # flake8-quotes
+    'RSE',          # flake8-raise
+    'RET',          # flake8-return
+    'SLF',          # flake8-self
+    'SIM',          # flake8-simplify
+    'TID',          # flake8-tidy-imports
+    'TD',           # flake8-todos
+    'ARG',          # flake8-unused-arguments
+    'PTH',          # flake8-use-pathlib
+]
+ignore = [
+    'S101',         # Use of assert detected
+    'D100',         # ignore missing docs
+    'D101',
+    'D102',
+    'D103',
+    'D104',
+    'D105',
+    'D106',
+    'D107',
+    'D212',         # ignore multiline summary not at first line
+    'D400',         # ignore first line must end in period
+    'D401',         # ignore imperative mood
+    'D415',         # ignore first line must end in punctuation
+    'E402',         # ignore module imports not at top of file
+    'TD003',        # ignore missing todo issue link
+]
+unfixable = [
+    'F401',         # unused imports
+    'C4',           # flake8-comprehensions
+    'PIE',          # flake8-pie
+    'TID',          # flake8-tidy-imports
+]
+
+
+[format]
+quote-style = 'double'
+
+[lint.flake8-quotes]
+docstring-quotes = 'double'     # ruff enforces double quotes on
+multiline-quotes = 'double'     # docstrings and multiline strings
+inline-quotes = 'double'
+
+# Allow unused variadic arguments like *args and **kwargs.
+[lint.flake8-unused-arguments]
+ignore-variadic-names = true

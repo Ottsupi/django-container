@@ -12,7 +12,20 @@
             }
         ]
     },
-    "isort.args": ["--profile", "black"],
-    "ruff.organizeImports": false,
+    "[django-html]": {
+        "editor.defaultFormatter": "monosans.djlint",
+        "editor.quickSuggestions": {
+            "comments": true,
+            "other": true,
+            "strings": true
+        }
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    },
+    "emmet.includeLanguages": {
+        "django-html": "html",
+        "jinja-html": "html"
+    },
     "cSpell.words": []
 }

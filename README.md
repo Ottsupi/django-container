@@ -2,16 +2,33 @@
 
 ## Features
 
--   Django 5.2
--   Postgres 17
--   Gunicorn 23
--   Nginx
+* Django 5.2
+* Postgres 17
+* Gunicorn 23
+* Nginx
+
+## What's been done
+
+* Use psycopg-c
+* Use argon2
+* Static files served by NGINX
+* Add Django development tools:
+  * django-debug-toolbar
+  * django-extensions
+  * Note: only when settings.DEBUG is true
+* Docker compose in the root directory for development
+    using VS Code dev container
+* Docker compose in `src` directory for deployment
+  * Gunicorn as app server
+  * NGINX as reverse proxy
+  * HTTPS enabled for local deployment
 
 ## How to use in development
 
 1. Rename the `.env.sample` file to `.env` found in `src/`
 2. Open in VS Code using Dev Containers
-3. Start development
+3. Install recommended extensions
+4. Start development
 * In case pylance does not work, do VS Code "reload window"
     after installing the Python extensions
 

@@ -11,6 +11,7 @@ src/static/*
 *.crt
 *.srl
 *.csr
+*.pem
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

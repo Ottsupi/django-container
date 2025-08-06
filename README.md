@@ -47,7 +47,7 @@
 
 ## Setting up SSL
 
-1. Genarate certificate and key
+1. Generate certificate and key
 2. Configure the web server to use them
 3. Add certificate to trust stores
 4. Comply with the ever-changing specs
@@ -117,3 +117,15 @@
 -   Study the config
 -   Know where to put things
 -   Learn how to point to things
+
+## Issues encountered
+
+### Cannot push when inside dev containers
+```
+fatal: server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
+```
+```
+openssl s_client -showcerts -servername github.com -connect github.com:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p'  > github-com.pem
+cat github-com.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
+```
+* https://stackoverflow.com/a/63299750

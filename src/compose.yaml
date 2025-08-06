@@ -1,8 +1,8 @@
 services:
   server:
     build: .
-    volumes:
-      - ./static:/code/static
+    # volumes:
+    # - ./static:/code/static
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
@@ -24,7 +24,8 @@ services:
     volumes:
       - database_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+      test:
+        ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
       start_period: 30s
       interval: 30s
       timeout: 10s

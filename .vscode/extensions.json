@@ -13,8 +13,6 @@
         "batisteo.vscode-django",
         // formatting
         "EditorConfig.EditorConfig",
-        "ms-python.black-formatter",
-        "ms-python.isort",
         "esbenp.prettier-vscode",
         // linting
         "streetsidesoftware.code-spell-checker",

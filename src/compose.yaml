@@ -1,3 +1,4 @@
+name: ${PROJECT_NAME}-${ENVIRONMENT}
 services:
   server:
     build: .

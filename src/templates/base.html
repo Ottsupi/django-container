@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block page_title %}
+        Django Container
+      {% endblock page_title %}
+    </title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+  </head>
+  <body>
+    {% block content %}
+      <h1>You are in base template.</h1>
+      <h2>Content is missing</h2>
+    {% endblock content %}
+  </body>
+</html>

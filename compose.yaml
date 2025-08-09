@@ -1,6 +1,8 @@
 services:
   develop:
-    build: .
+    build: 
+      context: .
+      dockerfile: ./docker/dev/Dockerfile
     volumes:
       - ".:/develop"
     env_file:

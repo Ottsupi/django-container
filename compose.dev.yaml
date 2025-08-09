@@ -5,7 +5,7 @@ services:
       context: .
       dockerfile: ./docker/dev/app.Dockerfile
     volumes:
-      - ".:/develop"
+      - ".:/code"
     env_file:
       - ./.env
     ports:

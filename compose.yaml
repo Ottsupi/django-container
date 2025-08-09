@@ -5,6 +5,8 @@ services:
       - ".:/develop"
     env_file:
       - ./src/.env
+    ports:
+      - 8000:8000
     depends_on:
       - database
   database:

@@ -1,3 +1,4 @@
+name: ${PROJECT_NAME}
 services:
   develop:
     build: 

@@ -1,9 +1,9 @@
 name: ${PROJECT_NAME}-${ENVIRONMENT}
 services:
   server:
-    build: .
-    # volumes:
-    # - ./static:/code/static
+    build:
+      context: .
+      dockerfile: ./docker/deploy/app.Dockerfile
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
@@ -36,7 +36,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: nginx/Dockerfile
+      dockerfile: ./docker/deploy/nginx.Dockerfile
     env_file:
       - .env
     ports:

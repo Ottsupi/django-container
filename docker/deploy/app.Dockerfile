@@ -8,6 +8,9 @@ RUN pip install --upgrade pip
 ENV APP_HOME /code
 WORKDIR ${APP_HOME}
 
+# This takes a while so install it earlier for cache
+RUN pip install --no-cache-dir psycopg[c]==3.2.*
+
 COPY ./requirements/ ./requirements/
 RUN pip install --no-cache-dir -r ./requirements/requirements.txt
 

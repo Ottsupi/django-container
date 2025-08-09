@@ -40,7 +40,7 @@ services:
     env_file:
       - .env
     ports:
-      - ${NGINX_PORT}:${NGINX_PORT}
+      - ${HTTP_PORT}:${HTTP_PORT}
       - ${HTTPS_PORT}:${HTTPS_PORT}
     depends_on:
       server:

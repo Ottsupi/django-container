@@ -3,7 +3,7 @@ FROM python:3.12
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-RUN apt update && apt upgrade
+RUN apt update && apt upgrade -y
 RUN apt install -y libpq-dev python3-dev
 
 RUN pip install --upgrade pip
@@ -12,7 +12,7 @@ ENV APP_HOME /develop
 WORKDIR ${APP_HOME}
 
 # This takes a while so install it earlier for cache
-RUN pip install psycopg-c==3.2.*
+RUN pip install --no-cache-dir psycopg-c==3.2.*
 
 COPY ./src/requirements.txt ./src/requirements.txt
 COPY ./src/requirements.dev.txt ./src/requirements.dev.txt

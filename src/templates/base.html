@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -8,8 +9,11 @@
         Django Container
       {% endblock page_title %}
     </title>
+    <!-- Metadata -->
     <meta name="description" content="">
     <meta name="keywords" content="">
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static "global.css" %}">
   </head>
   <body>
     {% block content %}

@@ -26,8 +26,8 @@ WORKDIR ${APP_HOME}
 # This takes a while so install it earlier for cache
 RUN pip install --no-cache-dir psycopg[c]==3.2.*
 
-COPY ./requirements/ ./requirements/
-RUN pip install --no-cache-dir -r ./requirements/requirements.txt
+COPY ./requirements/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r ./requirements.txt
 
 COPY ./src/ .
 

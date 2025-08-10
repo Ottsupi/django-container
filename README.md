@@ -3,67 +3,121 @@
 ## Features
 
 -   Django 5.2
+-   Tailwind 4.1
 -   Postgres 17
+-   Whitenoise
 -   Gunicorn 23
 -   Nginx
+-   Dev Container
 
 ## What's been done
 
--   Use psycopg-c
+-   Use psycopg[c]
 -   Use argon2
--   Static files served by NGINX
+-   Static files served by Whitenoise
 -   Add Django development tools:
     -   django-debug-toolbar
     -   django-extensions
-    -   Note: only when settings.DEBUG is true
--   Docker compose in the root directory for development
-    using VS Code dev container
--   Docker compose in `src` directory for deployment
-    -   Gunicorn as app server
-    -   NGINX as reverse proxy
-    -   HTTPS enabled for local deployment
+-   Add tailwindcss
 
 ## Todo
 
 -   Add custom user model
--   Add templates
--   Add tailwind
 -   Add htmx
 -   Add alpine.js
 -   Setup redis
 -   Setup automatic database backups
+-   Add deployment script
+-   `${ENVIRONMENT}` should be `"dev"` during development
+    because `"local"` can be a deployment environment
 
 ## How to use in development
 
-1. Rename the `.env.sample` file to `.env` found in `src/`
+0. Rename directory and the dev container in `.devcontainer/devcontainer.json`
+1. Configure your own `.env` file from `.env.sample`
 2. Open in VS Code using Dev Containers
+    - Altenatively, run `docker compose -f compose.dev.yaml up`
+      to start the development environment. Then, attach your editor
+      to the `${PROJECT_NAME}-develop` container.
 3. Install recommended extensions
 4. Start development
 
--   In case pylance does not work, do VS Code "reload window"
-    after installing the Python extensions
+## How to do deployments
 
-## How to deploy locally with SSL
-
-1. Rename the `.env.sample` file to `.env` found in `src/`
-2. Follow the steps below to generate the SSL certificate
+1. Configure your own `.env` file from `.env.sample`
+    - Make sure `$ENVIRONMENT` is not `"dev"`
+2. Follow the steps in "Setting up SSL" to generate the SSL certificate
 3. Run `docker compose up` in `src/`
 
-## Folder structure
+## Understanding the development process
 
--   Everything needed for the app to be deployed is found inside `src/`
--   Everything else outside that is needed for development
+-   `$ENVIRONMENT` must be `dev` during development
+    -   Django's `settings.DEBUG` depends on this environment variable
+-   The dev environment is defined by `compose.dev.yaml`
+    -   Development is done inside the container `${PROJECT_NAME}-develop`
+    -   On windows, it is recommended to have your project files inside WSL
+    -   There is a container for `@tailwind-cli` that watches for file changes
+        and deposits the output directly to the `STATIC_ROOT` because otherwise,
+        we will need to run `collectstatic` every time
+-   There is only one `settings.py`
+    -   Configurations are done through environment variables
+    -   `DEBUG` depends on `${ENVIRONMENT}`
+-   Makefile commands are available for common dev actions
+
+### Issues
+
+-   In case pylance does not work, do VS Code "Reload window"
+-   Problems? Do VS Code "Rebuild and reopen in container" (you will need to
+    reinstall the extensions)
+
+## Understanding the deployment process
+
+### `compose.deploy.yaml`
+
+-   Health checks are there to ensure that the containers are ready before performing
+    the necessary operations
+-   There is only one `.env` file for all containers
+
+### Step-by-step
+
+1. Database is built and started with the mounted docker volume `${PROJECT_NAME}-${ENVIRONMENT}_database-data`
+2. Database is accessible through the address `database:5432` in the docker private network
+3. Django image is built
+    - Stage 1: Tailwind builds the `global.css`
+    - Stage 2: Django app is built
+        - Copy `requirements/requirements.txt` to `.`
+        - Install the packages found in `requirements.txt`
+        - Copy `src/*` to `.`
+        - Copy the `global.css` into the `assets/` directory to be collected at runtime
+        - Final image contains only the necessary files: `requirements.txt` `src/*` `global.css`
+4. Django container is started with `src/entrypoint.sh`
+    - Applies database migrations
+    - Collects static files
+    - Starts the gunicorn server with the config `src/gunicorn.py`
+5. Gunicorn is accessible through the address `server:${GUNICORN_PORT}` in the docker private network
+6. Nginx container is built and started with the config `nginx/default.conf.template`
+7. Nginx uses the SSL certificate and key found in `nginx/`
+8. Forwards the requests to the gunicorn server
+9. Exposes to the host the default ports 80 and 443 for HTTP and HTTPS respectively
+
+### Notes:
+
+-   Static files are served by whitenoise
+-   `$ENVIRONMENT` must be NOT be `dev` on deployment
+    -   Otherwise, Django's `settings.DEBUG` will be `True` and will attempt to load the dev dependencies
 
 # Learnings
 
 ## Setting up SSL
+
+Generally:
 
 1. Generate certificate and key
 2. Configure the web server to use them
 3. Add certificate to trust stores
 4. Comply with the ever-changing specs
 
-## Generate certificate and key
+### Generate certificate and key
 
 0. `cd` into `./src/nginx`
 
@@ -145,17 +199,28 @@
 -   Know where to put things
 -   Learn how to point to things
 
-## Issues encountered
+# Issues encountered
 
-### Cannot push when inside dev containers
+-   Cannot push when inside dev containers
 
-```
-fatal: server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
-```
+    -   Error:
 
-```
-openssl s_client -showcerts -servername github.com -connect github.com:443 </dev/null 2>/dev/null | sed -n -e '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p'  > github-com.pem
-cat github-com.pem | sudo tee -a /etc/ssl/certs/ca-certificates.crt
-```
+        ```
+        fatal: server certificate verification failed.
+            CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
+        ```
 
--   https://stackoverflow.com/a/63299750
+    -   Solution:
+
+        ```
+        openssl s_client \
+            -showcerts -servername github.com \
+            -connect github.com:443 \
+            </dev/null 2>/dev/null | \
+            sed -n -e \
+            '/BEGIN\ CERTIFICATE/,/END\ CERTIFICATE/ p'  > github-com.pem
+
+        cat github-com.pem | tee -a /etc/ssl/certs/ca-certificates.crt
+        ```
+
+    -   Source: https://stackoverflow.com/a/63299750

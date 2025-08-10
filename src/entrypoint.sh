@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Apply database migrations
-echo "[1/2] ${ENVIRONMENT} - Applying database migrations..."
+echo "[1/3] ${ENVIRONMENT} - Applying database migrations..."
 python manage.py migrate --noinput
 
 # Start Gunicorn

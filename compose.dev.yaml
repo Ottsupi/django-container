@@ -1,5 +1,6 @@
 name: ${PROJECT_NAME}
 services:
+
   develop:
     build: 
       context: .
@@ -12,12 +13,21 @@ services:
       - 8000:8000
     depends_on:
       - database
+
   database:
     image: postgres:17
     env_file:
       - ./.env
     volumes:
       - database_data:/var/lib/postgresql/data
+
+  tailwind:
+    build: 
+      context: .
+      dockerfile: ./docker/dev/tailwind.Dockerfile
+    volumes:
+      - ".:/code"
+    tty: true
 
 volumes:
   database_data: {}

@@ -20,7 +20,7 @@ RUN apt install -y libpq-dev python3-dev
 
 RUN pip install --upgrade pip
 
-ENV APP_HOME /code
+ENV APP_HOME="/code"
 WORKDIR ${APP_HOME}
 
 # This takes a while so install it earlier for cache

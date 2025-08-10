@@ -19,7 +19,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - database_data:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql/data
 
   tailwind:
     build: 
@@ -30,4 +30,4 @@ services:
     tty: true
 
 volumes:
-  database_data: {}
+  database-data: {}

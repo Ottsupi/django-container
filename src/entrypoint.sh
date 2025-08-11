@@ -10,4 +10,4 @@ python manage.py collectstatic --noinput
 
 # Start Gunicorn
 echo "[3/3] ${ENVIRONMENT} - Starting Gunicorn..."
-exec gunicorn -c gunicorn.py core.wsgi:application
+exec gunicorn -c gunicorn.py config.wsgi:application

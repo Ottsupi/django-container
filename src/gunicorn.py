@@ -9,4 +9,4 @@ threads = 4
 timeout = 0
 
 # run with:
-# gunicorn -c gunicorn.py core.wsgi:application
+# gunicorn -c gunicorn.py config.wsgi:application

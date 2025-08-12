@@ -3,11 +3,17 @@ FROM python:3.12
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+ENV USER_HOME="/home/dev"
 ENV APP_HOME="/home/dev/code"
-WORKDIR ${APP_HOME}
 
-RUN groupadd --gid 1000 devgroup
-RUN useradd --uid 1000 --gid 1000 --create-home dev
+# Setup the dev environment
+WORKDIR ${USER_HOME}
+
+RUN addgroup --gid 1000 devgroup
+RUN adduser --uid 1000 --gid 1000 --disabled-password --shell /bin/bash --home /home/dev dev
+
+# Setup the app
+WORKDIR ${APP_HOME}
 
 RUN apt update && apt upgrade -y
 RUN apt install -y libpq-dev python3-dev
@@ -19,7 +25,7 @@ RUN pip install --no-cache-dir psycopg[c]==3.2.*
 COPY ./requirements/ ./requirements/
 RUN pip install --no-cache-dir -r ./requirements/requirements.dev.txt
 
-RUN chown -R dev:devgroup ${APP_HOME}/..
+RUN chown -R dev:devgroup ${USER_HOME}
 
 USER dev
 

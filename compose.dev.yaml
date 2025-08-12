@@ -1,8 +1,7 @@
 name: ${PROJECT_NAME}
 services:
-
   develop:
-    build: 
+    build:
       context: .
       dockerfile: ./docker/dev/app.Dockerfile
     volumes:
@@ -22,12 +21,14 @@ services:
       - database-data:/var/lib/postgresql/data
 
   tailwind:
-    build: 
+    build:
       context: .
       dockerfile: ./docker/dev/tailwind.Dockerfile
     volumes:
       - ".:/code"
+      - node-modules:/code/node_modules
     tty: true
 
 volumes:
   database-data: {}
+  node-modules: {}

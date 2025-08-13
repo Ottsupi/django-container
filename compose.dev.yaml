@@ -6,6 +6,7 @@ services:
       dockerfile: ./docker/dev/app.Dockerfile
     volumes:
       - ".:/home/dev/code"
+      - ".devcontainer/.bash_history:/home/dev/.bash_history"
     env_file:
       - ./.env
     ports:

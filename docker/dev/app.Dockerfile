@@ -3,14 +3,17 @@ FROM python:3.12
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+ARG DEV_CONTAINER_UID
+ARG DEV_CONTAINER_GID
+
 ENV USER_HOME="/home/dev"
 ENV APP_HOME="/home/dev/code"
 
 # Setup the dev environment
 WORKDIR ${USER_HOME}
 
-RUN addgroup --gid 1000 devgroup
-RUN adduser --uid 1000 --gid 1000 --disabled-password --shell /bin/bash --home /home/dev dev
+RUN addgroup --gid ${DEV_CONTAINER_GID} devgroup
+RUN adduser --uid ${DEV_CONTAINER_UID} --gid ${DEV_CONTAINER_GID} --disabled-password --shell /bin/bash --home /home/dev dev
 RUN mkdir -p .ssh && chmod 700 .ssh
 COPY ./.devcontainer/bash_history.template .bash_history
 RUN chmod 600 .bash_history

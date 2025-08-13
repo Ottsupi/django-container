@@ -4,6 +4,9 @@ services:
     build:
       context: .
       dockerfile: ./docker/dev/app.Dockerfile
+      args:
+        - DEV_CONTAINER_UID=${DEV_CONTAINER_UID}
+        - DEV_CONTAINER_GID=${DEV_CONTAINER_GID}
     volumes:
       - ".:/home/dev/code"
       - ".devcontainer/.bash_history:/home/dev/.bash_history"

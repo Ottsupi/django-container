@@ -12,7 +12,8 @@ WORKDIR ${USER_HOME}
 RUN addgroup --gid 1000 devgroup
 RUN adduser --uid 1000 --gid 1000 --disabled-password --shell /bin/bash --home /home/dev dev
 RUN mkdir -p .ssh && chmod 700 .ssh
-RUN touch .bash_history && chmod 600 .bash_history
+COPY ./.devcontainer/bash_history.template .bash_history
+RUN chmod 600 .bash_history
 COPY ./.devcontainer/.bashrc .bashrc
 
 

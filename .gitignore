@@ -1,3 +1,7 @@
+# bash
+.bash_history
+.bashrc
+
 # node
 node_modules/
 

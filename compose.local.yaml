@@ -3,7 +3,7 @@ services:
   server:
     build:
       context: .
-      dockerfile: ./docker/deploy/app.Dockerfile
+      dockerfile: ./docker/local/app.Dockerfile
     env_file:
       - .env
     entrypoint: ["./entrypoint.sh"]
@@ -30,7 +30,7 @@ services:
     restart: always
     build:
       context: .
-      dockerfile: ./docker/deploy/nginx.Dockerfile
+      dockerfile: ./docker/local/nginx.Dockerfile
     env_file:
       - .env
     ports:

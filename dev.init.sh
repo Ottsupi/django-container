@@ -64,7 +64,7 @@ echo "[$CURRENT_STEP/$TOTAL_STEPS] Setting up HTTPS for local deployment..."
 if [[ -f $ROOT_CA_CRT_FILE && -f $ROOT_CA_KEY_FILE ]]; then
     echo "  ✓ root ca found"
 else
-    openssl req -x509 -noenc -quiet \
+    openssl req -x509 -noenc \
         -newkey RSA:2048 \
         -keyout $ROOT_CA_KEY_FILE \
         -days 365 \
@@ -78,7 +78,7 @@ fi
 if [[ -f $SERVER_CSR_FILE && -f $SERVER_KEY_FILE ]]; then
     echo "  ✓ server key and csr found"
 else
-    openssl req -noenc -quiet \
+    openssl req -noenc \
         -newkey rsa:2048 \
         -keyout $SERVER_KEY_FILE \
         -out $SERVER_CSR_FILE \

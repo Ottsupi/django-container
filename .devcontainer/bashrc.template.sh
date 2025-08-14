@@ -56,18 +56,18 @@ echo "π $random_message"
 # start ssh-agent
 # run ssh-agent if it's not running and do nothing otherwise
 # https://stackoverflow.com/a/48509425
-if [ $(ps ax | grep [s]sh-agent | wc -l) -gt 0 ] ; then
-    echo "✓ ssh"
-else
-    eval $(ssh-agent -s)
-    # add your key here
-    # if [ "$(ssh-add -l)" == "The agent has no identities." ] ; then
-        # ssh-add ~/.ssh/id_rsa
-        # echo "Identity added"
-    # fi
+# if [ $(ps ax | grep [s]sh-agent | wc -l) -gt 0 ] ; then
+#     echo "✓ ssh"
+# else
+#     eval $(ssh-agent -s)
+#     # add your key here
+#     # if [ "$(ssh-add -l)" == "The agent has no identities." ] ; then
+#         # ssh-add ~/.ssh/id_rsa
+#         # echo "Identity added"
+#     # fi
 
-    # Don't leave extra agents around: kill it on exit. You may not want this part.
-    # trap "ssh-agent -k" exit
-fi
+#     # Don't leave extra agents around: kill it on exit. You may not want this part.
+#     # trap "ssh-agent -k" exit
+# fi
 
 echo ""

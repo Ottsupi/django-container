@@ -123,7 +123,7 @@ Generally:
 
 1. Establish a private _Certificate Authority (CA)_
 
-    ```sh-session
+    ```sh
     openssl req -x509 -nodes \
         -newkey RSA:2048 \
         -keyout root_ca.key \
@@ -139,7 +139,7 @@ Generally:
 
 2. Create a private key and _Certificate Signing Request (CSR)_
 
-    ```sh-session
+    ```sh
     openssl req -nodes \
         -newkey rsa:2048 \
         -keyout server.key \
@@ -154,7 +154,7 @@ Generally:
 
 3. Generate a certificate issued by `root_ca`
 
-    ```sh-session
+    ```sh
     openssl x509 -req \
         -CA root_ca.crt \
         -CAkey root_ca.key \
@@ -171,7 +171,7 @@ Generally:
         - `server.srl`
 
 4. (Optional) Grant read access to the key
-    ```
+    ```sh
         chmod +r server.key
     ```
     - In some cases, docker cannot copy the file because of missing permissions
@@ -211,7 +211,22 @@ Generally:
 -   Place the project files in home subdirectory i.e. `~/code`
     -   Reminder that mounting volumes wipes the target directory in the container
     -   To prevent this, create a docker volume mount
--   SSH? No idea. SSH agent maybe, but I CANNOT get it to work x_x
+-   SSH? No idea. SSH agent forwarding maybe, but I CANNOT get it to work x_x
+
+## Bash scripting
+
+-   Test expressions are awesome!!
+    ```bash
+    if [[ -f .env ]]; then
+        echo ".env file exists!"
+    fi
+    ```
+-   Case statements are cool too! It doesn't even highlight properly...
+    ```bash
+    if [[ "$KEY" =~ [\'\"\\\$] ]]; then
+        echo "KEY contains the characters \\ \$ \" '"
+    fi
+    ```
 
 # Issues encountered
 

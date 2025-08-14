@@ -24,7 +24,9 @@ COPY ./.devcontainer/.bashrc .bashrc
 WORKDIR ${APP_HOME}
 
 RUN apt update && apt upgrade -y
-RUN apt install -y libpq-dev python3-dev
+RUN apt install -y --no-install-recommends \
+    build-essential \
+    libpq-dev 
 
 RUN pip install --upgrade pip
 RUN pip install --no-cache-dir psycopg[c]==3.2.*

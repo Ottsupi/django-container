@@ -199,6 +199,20 @@ Generally:
 -   Know where to put things
 -   Learn how to point to things
 
+## Creating Dev Containers
+
+-   Create a user during build
+-   Make sure `USER` command actually used in the Dockerfile
+-   Container user's UID and GID must match that of the host user
+-   Make sure to set appropriate permission levels for files and directories
+    -   600 for `.bash_history`
+    -   700 for `.ssh/`
+    -   `chown` the container user's home directory
+-   Place the project files in home subdirectory i.e. `~/code`
+    -   Reminder that mounting volumes wipes the target directory in the container
+    -   To prevent this, create a docker volume mount
+-   SSH? No idea. SSH agent maybe, but I CANNOT get it to work x_x
+
 # Issues encountered
 
 -   Cannot push when inside dev containers

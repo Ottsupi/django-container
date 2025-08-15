@@ -168,7 +168,7 @@ echo "*** Pre-release Script Finished ***"
 # Do database backup if possible
 # If not, just ignore
 echo ""
-echo "Attempting to backup database..."
+echo "Attempting to backup database before applying code changes..."
 echo ""
 
 if [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
@@ -179,7 +179,7 @@ else
 fi
 
 if [ $? -eq 1 ]; then
-    echo "Skipping pre-deploy database backup..."
+    echo "Skipping database backup..."
 fi
 
 
@@ -187,26 +187,31 @@ echo ""
 echo "Attempting to update git repository..."
 echo ""
 
-GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+echo "*** Git Repository Script ***"
 OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 git pull
 if [ $? -eq 1 ]; then
-    echo "Git failed!!!"
+    echo "!!! Git Repository Script Failed !!!"
     exit 1
 fi
+
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 LATEST_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
-
-echo "*** Git Repository Script ***"
 echo "Branch:  $GIT_BRANCH"
-echo "Latest:  $LATEST_GIT_COMMIT_HASH"
 echo "Current: $OLD_GIT_COMMIT_HASH"
+echo "Latest:  $LATEST_GIT_COMMIT_HASH"
 
+if [ "$OLD_GIT_COMMIT_HASH" != "$LATEST_GIT_COMMIT_HASH" ]; then
+    echo "Code changes applied!"
+fi
 if [ "$OLD_GIT_COMMIT_HASH" == "$LATEST_GIT_COMMIT_HASH" ]; then
+    echo "No code changes"
     if [ $FLAG_NO_CODE_CHANGE -eq 1 ]; then
-        echo "Allowed to deploy without code changes"
-        echo "No code changes to deploy but deploying anyway"
+        echo "Allowed to deploy"
     else
-        echo "No new changes to deploy"
+        echo "Deployment NOT allowed"
+        echo "Use flag '--no-code-changes' to allow deployments without new changes"
         exit 0
     fi
 fi

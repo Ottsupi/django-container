@@ -13,7 +13,7 @@ else
     echo "ERROR: .env file not found"
     echo "Please setup your own .env from the template .env.sample"
     echo ""
-    return 1
+    exit 1
 fi
 
 echo ""
@@ -82,7 +82,7 @@ if [[ "${#SOLUTIONS[@]}" -gt 0 ]]; then
     echo ""
     echo "Some problems occured. Please fix to continue"
     echo ""
-    return 0
+    exit 0
 fi
 
 echo ""

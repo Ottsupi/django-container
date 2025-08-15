@@ -15,7 +15,7 @@ else
 fi
 
 # If no options given, display help
-if (( $# == 0 )); then
+function help() {
     echo "This is the deployment script for..."
     echo "Project:     $PROJECT_NAME"
     echo "Environment: $ENVIRONMENT"
@@ -26,28 +26,26 @@ if (( $# == 0 )); then
     echo "./$(basename $0) [options]"
     echo ""
     echo "Options:"
-    echo "--deploy            This must be the first option given to allow"
-    echo "                      running the deployment script."
+    echo "--deploy            Must be set to actually rebuild and rerun the containers"
     echo "--initial           Specifies initial deployment"
     echo "--no-code-change    Allows the script to run even without code changes."
     echo "--no-db-backup      Disable pre-deploy database backup."
     exit 0
-fi
-
-if [ "$1" != "--deploy" ]; then
-    echo "The first option must be '--deploy' to run the script"
-    echo "Run './$(basename $0)' to view the help text"
-    exit 1
-fi
+}
 
 FLAG_INITIAL=0
 FLAG_NO_CODE_CHANGE=0
 FLAG_NO_DB_BACKUP=0
+FLAG_DEPLOY=0
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
+        -h | --help)
+            help
+            ;;
         --deploy)
             echo "Deployment script started"
+            FLAG_DEPLOY=1
             ;;
         --initial)
             echo "Initial deployment"
@@ -225,6 +223,12 @@ echo "Directory:   $BASE_PATH"
 echo "Branch:      $GIT_BRANCH"
 echo "Commit ID:   $LATEST_GIT_COMMIT_HASH"
 
+if [ $FLAG_DEPLOY -eq 0 ]; then
+    echo "Missing '--deploy' flag"
+    echo "Will not be deployed"
+    exit 0
+fi
+
 echo ""
 echo "Ready for deployment!"
 echo "Docker will take it from here."
@@ -238,5 +242,5 @@ while [ $COUNTDOWN -gt 0 ]; do
   sleep 2
 done
 
-# docker compose -f compose.local.yaml up --build --no-deps --force-recreate -d
+docker compose -f compose.local.yaml up --build --no-deps --force-recreate -d
 # docker compose -f compose.local.yaml up -d

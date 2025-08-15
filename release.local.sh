@@ -30,7 +30,6 @@ if (( $# == 0 )); then
     echo "                      running the deployment script."
     echo "--initial           Specifies initial deployment"
     echo "--no-code-change    Allows the script to run even without code changes."
-    echo "                      Use in the initial deployment."
     echo "--no-db-backup      Disable pre-deploy database backup."
     exit 0
 fi
@@ -53,6 +52,8 @@ while [[ "$#" -gt 0 ]]; do
         --initial)
             echo "Initial deployment"
             FLAG_INITIAL=1
+            FLAG_NO_CODE_CHANGE=1
+            FLAG_NO_DB_BACKUP=1
             ;;
         --no-code-change)
             echo "Deploy without code change"
@@ -172,10 +173,7 @@ echo ""
 echo "Attempting to backup database..."
 echo ""
 
-if [ $FLAG_INITIAL -eq 1 ]; then
-    echo "Initial deployment."
-    echo "Skipping database backup..."
-elif [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
+if [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
     echo "Database backup disabled."
     echo "Skipping database backup..."
 else
@@ -240,5 +238,5 @@ while [ $COUNTDOWN -gt 0 ]; do
   sleep 2
 done
 
-docker compose -f compose.local.yaml up --build --no-deps --force-recreate -d
+# docker compose -f compose.local.yaml up --build --no-deps --force-recreate -d
 # docker compose -f compose.local.yaml up -d

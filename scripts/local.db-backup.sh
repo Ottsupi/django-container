@@ -46,10 +46,11 @@ docker exec c-user-local-database-1 pg_dump \
 
 if [ $? -eq 0 ]; then
     echo "Created backup $BACKUP_FILE"
+    echo "*** Database Backup Script Finished ***"
     exit 0
 else
     echo "Failed to create backup"
+    echo "!!! Database Backup Script Failed !!!"
     exit 1
 fi
 
-echo "*** Database Backup Script Finished ***"

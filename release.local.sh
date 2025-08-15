@@ -29,14 +29,16 @@ function help() {
     echo "--deploy            Must be set to actually rebuild and rerun the containers"
     echo "--initial           Specifies initial deployment"
     echo "--no-code-change    Allows the script to run even without code changes."
-    echo "--no-db-backup      Disable pre-deploy database backup."
+    echo "--no-db-backup      Disable pre code change database backup."
+    echo "--no-porcelain      Disable clean git worktree check"
     exit 0
 }
 
+FLAG_DEPLOY=0
 FLAG_INITIAL=0
 FLAG_NO_CODE_CHANGE=0
 FLAG_NO_DB_BACKUP=0
-FLAG_DEPLOY=0
+FLAG_NO_PORCELAIN=0
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
@@ -60,6 +62,10 @@ while [[ "$#" -gt 0 ]]; do
         --no-db-backup)
             echo "Database backup disabled"
             FLAG_NO_DB_BACKUP=1
+            ;;
+        --no-porcelain)
+            echo "Disable clean git worktree check"
+            FLAG_NO_PORCELAIN=1
             ;;
         *)
             echo "Unknown option: $1"
@@ -189,6 +195,14 @@ echo ""
 
 
 echo "*** Git Repository Script ***"
+if [ $FLAG_NO_PORCELAIN -eq 0 ]; then
+    if [[ $(git status --porcelain) ]]; then
+        echo "Git worktree is dirty: Uncommitted changes found"
+        git status --porcelain
+        exit 1
+    fi
+fi
+
 OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 git pull
 if [ $? -eq 1 ]; then

@@ -26,11 +26,12 @@ if (( $# == 0 )); then
     echo "./$(basename $0) [options]"
     echo ""
     echo "Options:"
-    echo "--deploy     This must be the first option given to allow"
-    echo "               running the deployment script."
-    echo "--initial    Specifies initial deployment"
-    echo "--no-code    Allows the script to run even without code changes."
-    echo "               Use in the initial deployment."
+    echo "--deploy            This must be the first option given to allow"
+    echo "                      running the deployment script."
+    echo "--initial           Specifies initial deployment"
+    echo "--no-code-change    Allows the script to run even without code changes."
+    echo "                      Use in the initial deployment."
+    echo "--no-db-backup      Disable pre-deploy database backup."
     exit 0
 fi
 
@@ -41,7 +42,8 @@ if [ "$1" != "--deploy" ]; then
 fi
 
 FLAG_INITIAL=0
-FLAG_NO_CODE=0
+FLAG_NO_CODE_CHANGE=0
+FLAG_NO_DB_BACKUP=0
 
 while [[ "$#" -gt 0 ]]; do
     case "$1" in
@@ -52,9 +54,13 @@ while [[ "$#" -gt 0 ]]; do
             echo "Initial deployment"
             FLAG_INITIAL=1
             ;;
-        --no-code)
+        --no-code-change)
             echo "Deploy without code change"
-            FLAG_NO_CODE=1
+            FLAG_NO_CODE_CHANGE=1
+            ;;
+        --no-db-backup)
+            echo "Database backup disabled"
+            FLAG_NO_DB_BACKUP=1
             ;;
         *)
             echo "Unknown option: $1"
@@ -169,6 +175,9 @@ echo ""
 if [ $FLAG_INITIAL -eq 1 ]; then
     echo "Initial deployment."
     echo "Skipping database backup..."
+elif [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
+    echo "Database backup disabled."
+    echo "Skipping database backup..."
 else
     ./scripts/local.db-backup.sh
 fi
@@ -185,13 +194,19 @@ echo ""
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 git pull
+if [ $? -eq 1 ]; then
+    echo "Git failed!!!"
+    exit 1
+fi
 LATEST_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 
+echo "*** Git Repository Script ***"
+echo "Branch:  $GIT_BRANCH"
+echo "Latest:  $LATEST_GIT_COMMIT_HASH"
+echo "Current: $OLD_GIT_COMMIT_HASH"
+
 if [ "$OLD_GIT_COMMIT_HASH" == "$LATEST_GIT_COMMIT_HASH" ]; then
-    echo "Branch:  $GIT_BRANCH"
-    echo "Latest:  $LATEST_GIT_COMMIT_HASH"
-    echo "Current: $OLD_GIT_COMMIT_HASH"
-    if [ $FLAG_INITIAL -eq 1 ]; then
+    if [ $FLAG_NO_CODE_CHANGE -eq 1 ]; then
         echo "Allowed to deploy without code changes"
         echo "No code changes to deploy but deploying anyway"
     else
@@ -199,6 +214,7 @@ if [ "$OLD_GIT_COMMIT_HASH" == "$LATEST_GIT_COMMIT_HASH" ]; then
         exit 0
     fi
 fi
+echo "*** Git Repository Script Finished ***"
 
 echo ""
 echo "Attempting to deploy..."

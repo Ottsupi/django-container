@@ -14,7 +14,8 @@ else
     exit 1
 fi
 
-# If no options given, display help
+
+# Help text
 function help() {
     echo "This is the deployment script for..."
     echo "Project:     $PROJECT_NAME"
@@ -33,6 +34,9 @@ function help() {
     echo "--no-porcelain      Disable clean git worktree check"
     exit 0
 }
+
+
+# Handle flags
 
 FLAG_DEPLOY=0
 FLAG_INITIAL=0
@@ -76,8 +80,10 @@ while [[ "$#" -gt 0 ]]; do
 done
 
 
-echo ""
+# This part is simply a "static" check to make sure
+# there is nothing amiss in the .env file
 
+echo ""
 echo "*** Pre-release Script ***"
 echo "Project:     $PROJECT_NAME"
 echo "Environment: $ENVIRONMENT"
@@ -107,6 +113,8 @@ else
 fi
 
 
+# Setup SSL for localhost
+
 NGINX_PATH="$BASE_PATH/nginx"
 ROOT_CA_CONF_FILE="$NGINX_PATH/root_ca.conf"
 ROOT_CA_CRT_FILE="$NGINX_PATH/root_ca.crt"
@@ -129,6 +137,10 @@ else
         -config $ROOT_CA_CONF_FILE \
         -extensions 'v3_req' \
         &>/dev/null
+    if [ $? -eq 1 ]; then
+        echo "Error creating root ca"
+        exit 1
+    fi
     echo "  ✓  created root ca"
 fi
 
@@ -142,6 +154,10 @@ else
         -config $SERVER_CONF_FILE \
         -extensions 'v3_req' \
         &>/dev/null
+    if [ $? -eq 1 ]; then
+        echo "Error creating server csr"
+        exit 1
+    fi
     echo "  ✓  created server csr"
 fi
 
@@ -157,6 +173,10 @@ else
         -extfile $SERVER_CONF_FILE \
         -extensions 'v3_req' \
         &>/dev/null
+    if [ $? -eq 1 ]; then
+        echo "Error creating server certificate"
+        exit 1
+    fi
     echo "  ✓  created server certificate"
 fi
 
@@ -171,7 +191,7 @@ fi
 
 echo "*** Pre-release Script Finished ***"
 
-# Do database backup if possible
+# Backup database if possible
 # If not, just ignore
 echo ""
 echo "Attempting to backup database before applying code changes..."
@@ -182,12 +202,11 @@ if [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
     echo "Skipping database backup..."
 else
     ./scripts/local.db-backup.sh
+    if [ $? -eq 1 ]; then
+        echo "Database backup failed!"
+        exit 1
+    fi
 fi
-
-if [ $? -eq 1 ]; then
-    echo "Skipping database backup..."
-fi
-
 
 echo ""
 echo "Attempting to update git repository..."
@@ -195,6 +214,7 @@ echo ""
 
 
 echo "*** Git Repository Script ***"
+# Check if git worktree is clean
 if [ $FLAG_NO_PORCELAIN -eq 0 ]; then
     if [[ $(git status --porcelain) ]]; then
         echo "Git worktree is dirty: Uncommitted changes found"
@@ -203,6 +223,7 @@ if [ $FLAG_NO_PORCELAIN -eq 0 ]; then
     fi
 fi
 
+# Save old commit hash before syncing the repository
 OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 git pull
 if [ $? -eq 1 ]; then
@@ -216,6 +237,7 @@ echo "Branch:  $GIT_BRANCH"
 echo "Current: $OLD_GIT_COMMIT_HASH"
 echo "Latest:  $LATEST_GIT_COMMIT_HASH"
 
+# If there are NO new changes, exit
 if [ "$OLD_GIT_COMMIT_HASH" != "$LATEST_GIT_COMMIT_HASH" ]; then
     echo "Code changes applied!"
 fi
@@ -242,6 +264,7 @@ echo "Directory:   $BASE_PATH"
 echo "Branch:      $GIT_BRANCH"
 echo "Commit ID:   $LATEST_GIT_COMMIT_HASH"
 
+# If the --deploy flag is not set, cut the script
 if [ $FLAG_DEPLOY -eq 0 ]; then
     echo "Missing '--deploy' flag"
     echo "Will not be deployed"

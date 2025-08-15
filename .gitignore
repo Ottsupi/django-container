@@ -1,3 +1,7 @@
+# database backups
+database/*
+!database/.gitkeep
+
 # bash
 .bash_history
 .bashrc

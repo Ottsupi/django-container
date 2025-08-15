@@ -36,7 +36,7 @@ echo "Creating backup..."
 
 DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
 GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
-BACKUP_FILE=database/$DATE-$GIT_COMMIT_HASH-$ENVIRONMENT.sql
+BACKUP_FILE=database/$PROJECT_NAME-$ENVIRONMENT-$DATE-$GIT_COMMIT_HASH.sql
 
 PGPASSWORD=$POSTGRES_PASSWORD
 docker exec c-user-local-database-1 pg_dump \

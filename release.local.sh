@@ -9,20 +9,15 @@ if [ -f $ENV_FILE ]; then
     source .env
     set +a
 else
-    echo ""
     echo "ERROR: .env file not found"
     echo "Please setup your own .env from the template .env.sample"
-    echo ""
-    return 1
+    exit 1
 fi
 
-echo ""
-echo "Release script for local environment"
-echo ""
+echo "*** Pre-release Script ***"
 echo "Project:     $PROJECT_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Directory:   $BASE_PATH"
-echo ""
 
 TOTAL_STEPS=2
 CURRENT_STEP=0
@@ -102,18 +97,53 @@ else
 fi
 
 if [[ "${#SOLUTIONS[@]}" -gt 0 ]]; then
-    echo ""
     echo "Solutions:"
     for solution in "${SOLUTIONS[@]}"; do
         echo " - $solution"
     done
-    echo ""
     echo "Some problems occured. Please fix to continue."
-    echo ""
-    return 1
+    exit 1
 fi
 
+echo "*** Pre-release Script Finished ***"
+
+# Do database backup if possible
+# If not, just ignore
 echo ""
+echo "Attempting to backup database..."
+echo ""
+
+./scripts/local.db-backup.sh
+
+if [ $? -eq 1 ]; then
+    echo "Skipping pre-deploy database backup..."
+fi
+
+
+echo ""
+echo "Attempting to update git repository..."
+echo ""
+
+GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+git pull
+LATEST_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
+
+if [ "$OLD_GIT_COMMIT_HASH" == "$LATEST_GIT_COMMIT_HASH" ]; then
+    echo "Branch:  $GIT_BRANCH"
+    echo "Latest:  $LATEST_GIT_COMMIT_HASH"
+    echo "Current: $OLD_GIT_COMMIT_HASH"
+    echo "No new changes to deploy"
+    exit 0
+fi
+
+echo "*** Release Script ***"
+echo "Project:     $PROJECT_NAME"
+echo "Environment: $ENVIRONMENT"
+echo "Directory:   $BASE_PATH"
+echo "Branch:      $GIT_BRANCH"
+echo "Commit ID:   $LATEST_GIT_COMMIT_HASH"
+
 echo "Ready for deployment to local!"
 echo "Starting in..."
 sleep 1
@@ -124,6 +154,6 @@ while [ $COUNTDOWN -gt 0 ]; do
   ((--COUNTDOWN))
   sleep 2
 done
-echo ""
 
 docker compose -f compose.local.yaml up --build --no-deps --force-recreate -d
+# docker compose -f compose.local.yaml up -d

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+LOGFILE="logs/db-backups.log"
+exec > >(tee -a "$LOGFILE") 2>&1
+
 SCRIPT_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 BASE_PATH=$( dirname $SCRIPT_PATH )
 ENV_FILE=$BASE_PATH/.env
@@ -16,6 +19,16 @@ else
 fi
 
 CONTAINER_NAME="$PROJECT_NAME-$ENVIRONMENT-database-1"
+DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
+echo ""
+echo "*** Database Backup Script ***"
+echo "Project:     $PROJECT_NAME"
+echo "Environment: $ENVIRONMENT"
+echo "Directory:   $BASE_PATH"
+echo "Container:   $CONTAINER_NAME"
+echo "Date:        $DATE"
+
+
 if [ $(docker ps -a | grep -c "$CONTAINER_NAME") -eq 0 ]; then
     echo "ERROR: Container $CONTAINER_NAME does not exist"
     exit 1
@@ -27,13 +40,6 @@ if [ "$CONTAINER_IS_RUNNING" == "false" ]; then
     exit 1
 fi
 
-DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
-echo "*** Database Backup Script ***"
-echo "Project:     $PROJECT_NAME"
-echo "Environment: $ENVIRONMENT"
-echo "Directory:   $BASE_PATH"
-echo "Container:   $CONTAINER_NAME"
-echo "Date:        $DATE"
 echo "Creating backup..."
 
 GIT_COMMIT_HASH=$(git rev-parse --short HEAD)

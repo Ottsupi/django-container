@@ -1,5 +1,8 @@
 #!/bin/bash
 
+LOGFILE="logs/releases.log"
+exec > >(tee -a "$LOGFILE") 2>&1
+
 DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
 BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 ENV_FILE="$BASE_PATH/.env"
@@ -201,7 +204,6 @@ echo "*** Pre-release Script Finished ***"
 
 echo ""
 echo "Attempting to backup database before applying code changes..."
-echo ""
 
 if [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
     echo "Database backup disabled."

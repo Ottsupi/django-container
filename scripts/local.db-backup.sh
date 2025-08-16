@@ -27,14 +27,15 @@ if [ "$CONTAINER_IS_RUNNING" == "false" ]; then
     exit 1
 fi
 
+DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
 echo "*** Database Backup Script ***"
 echo "Project:     $PROJECT_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Directory:   $BASE_PATH"
 echo "Container:   $CONTAINER_NAME"
+echo "Date:        $DATE"
 echo "Creating backup..."
 
-DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
 GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
 BACKUP_FILE=database/$PROJECT_NAME-$ENVIRONMENT-$DATE-$GIT_COMMIT_HASH.sql
 

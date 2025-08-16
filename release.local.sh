@@ -1,5 +1,6 @@
 #!/bin/bash
 
+DATE=$(date -u +%Y-%m-%dT%H-%M-%SZ)
 BASE_PATH=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 ENV_FILE="$BASE_PATH/.env"
 
@@ -32,9 +33,15 @@ function help() {
     echo "--no-code-change    Allows the script to run even without code changes."
     echo "--no-db-backup      Disable pre code change database backup."
     echo "--no-porcelain      Disable clean git worktree check"
+    echo ""
+    echo "Recommended: Run with 'tee' to create log file"
+    echo "             ./$(basename $0) 2>&1 | tee -a releases.log"
     exit 0
 }
 
+echo ""
+echo "==============$DATE=============="
+echo ""
 
 # Handle flags
 
@@ -88,6 +95,7 @@ echo "*** Pre-release Script ***"
 echo "Project:     $PROJECT_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Directory:   $BASE_PATH"
+echo "Date:        $DATE"
 
 TOTAL_STEPS=2
 CURRENT_STEP=0
@@ -191,8 +199,6 @@ fi
 
 echo "*** Pre-release Script Finished ***"
 
-# Backup database if possible
-# If not, just ignore
 echo ""
 echo "Attempting to backup database before applying code changes..."
 echo ""
@@ -201,6 +207,7 @@ if [ $FLAG_NO_DB_BACKUP -eq 1 ]; then
     echo "Database backup disabled."
     echo "Skipping database backup..."
 else
+    # Backup database, exit if failed 
     ./scripts/local.db-backup.sh
     if [ $? -eq 1 ]; then
         echo "Database backup failed!"
@@ -219,6 +226,9 @@ if [ $FLAG_NO_PORCELAIN -eq 0 ]; then
     if [[ $(git status --porcelain) ]]; then
         echo "Git worktree is dirty: Uncommitted changes found"
         git status --porcelain
+        echo "NOT RECOMMENDED: Use flag '--no-porcelain' to allow deploying dirty worktree"
+        echo "Reminder: 'git pull' is called after this which may cause merge conficts"
+        echo "           so it is recommended to clean the work tree first"
         exit 1
     fi
 fi
@@ -237,7 +247,7 @@ echo "Branch:  $GIT_BRANCH"
 echo "Current: $OLD_GIT_COMMIT_HASH"
 echo "Latest:  $LATEST_GIT_COMMIT_HASH"
 
-# If there are NO new changes, exit
+# If there are NO new changes and flag --no_code_change is not set, exit
 if [ "$OLD_GIT_COMMIT_HASH" != "$LATEST_GIT_COMMIT_HASH" ]; then
     echo "Code changes applied!"
 fi

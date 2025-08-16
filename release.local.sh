@@ -35,7 +35,7 @@ function help() {
     echo "--no-porcelain      Disable clean git worktree check"
     echo ""
     echo "Recommended: Run with 'tee' to create log file"
-    echo "             ./$(basename $0) 2>&1 | tee -a releases.log"
+    echo "             ./$(basename $0) 2>&1 | tee -a logs/releases.log"
     exit 0
 }
 
@@ -57,7 +57,7 @@ while [[ "$#" -gt 0 ]]; do
             help
             ;;
         --deploy)
-            echo "Deployment script started"
+            echo "Deployment enabled"
             FLAG_DEPLOY=1
             ;;
         --initial)
@@ -224,34 +224,73 @@ echo "*** Git Repository Script ***"
 # Check if git worktree is clean
 if [ $FLAG_NO_PORCELAIN -eq 0 ]; then
     if [[ $(git status --porcelain) ]]; then
-        echo "Git worktree is dirty: Uncommitted changes found"
+        echo "Git worktree is dirty"
+        echo "Uncommitted changes found:"
         git status --porcelain
-        echo "NOT RECOMMENDED: Use flag '--no-porcelain' to allow deploying dirty worktree"
-        echo "Reminder: 'git pull' is called after this which may cause merge conficts"
-        echo "           so it is recommended to clean the work tree first"
+        echo "NOT RECOMMENDED: Use flag '--no-porcelain' to allow deploying dirty working tree"
+        echo "Reminder: 'git fetch' and 'git pull' is called after this which may cause"
+        echo "           merge conficts, so it is recommended to clean the working tree first"
         exit 1
     fi
 fi
 
-# Save old commit hash before syncing the repository
-OLD_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
-git pull
+git fetch
 if [ $? -eq 1 ]; then
+    echo "'git fetch' failed"
     echo "!!! Git Repository Script Failed !!!"
     exit 1
 fi
 
 GIT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
-LATEST_GIT_COMMIT_HASH=$(git rev-parse --short HEAD)
-echo "Branch:  $GIT_BRANCH"
-echo "Current: $OLD_GIT_COMMIT_HASH"
-echo "Latest:  $LATEST_GIT_COMMIT_HASH"
+PRE_FETCH_HEAD_COMMIT_HASH=$(git rev-parse --short HEAD)
+FETCH_HEAD_COMMIT_HASH=$(git rev-parse --short FETCH_HEAD)
+POST_MERGE_HEAD_COMMIT_HASH=""
+echo "Branch:     $GIT_BRANCH"
+echo "HEAD:       $PRE_FETCH_HEAD_COMMIT_HASH"
+echo "FETCH_HEAD: $FETCH_HEAD_COMMIT_HASH"
+echo ""
+
+# Print only the first two lines from 'git status'
+echo "Git Status Report (pre-merge):"
+git status | head -n 2
+echo ""
+
+echo "Git Fetch Report:"
+NEW_COMMITS_COUNT= git --no-pager log --decorate=short --oneline ..FETCH_HEAD | wc -l | tr -d '\n'
+echo "$NEW_COMMITS_COUNT new commits from remote"
+if [[ $NEW_COMMITS_COUNT -gt 0 ]]; then
+    git --no-pager log --decorate=short --oneline ..FETCH_HEAD | wc -l
+fi
+echo ""
+
+# If the --deploy flag is not set, cut the script right here
+if [ $FLAG_DEPLOY -eq 0 ]; then
+    echo "Code changes fetched but not yet merged"
+    echo "Script will not continue to deployment"
+    echo "Use '--deploy' flag to continue"
+    exit 0
+fi
+
+echo "Merging..."
+git merge
+if [ $? -eq 1 ]; then
+    echo "'git merge' failed"
+    echo "!!! Git Repository Script Failed !!!"
+    exit 1
+fi
+POST_MERGE_HEAD_COMMIT_HASH=$(git rev-parse --short HEAD)
+echo ""
+
+echo "Git Status Report (post-merge):"
+git status | head -n 2
+echo ""
 
 # If there are NO new changes and flag --no_code_change is not set, exit
-if [ "$OLD_GIT_COMMIT_HASH" != "$LATEST_GIT_COMMIT_HASH" ]; then
+if [[ $NEW_COMMITS_COUNT -gt 0 ]]; then
+    echo "$PRE_FETCH_HEAD_COMMIT_HASH -> $POST_MERGE_HEAD_COMMIT_HASH"
     echo "Code changes applied!"
-fi
-if [ "$OLD_GIT_COMMIT_HASH" == "$LATEST_GIT_COMMIT_HASH" ]; then
+else
+    echo "$PRE_FETCH_HEAD_COMMIT_HASH -> $POST_MERGE_HEAD_COMMIT_HASH"
     echo "No code changes"
     if [ $FLAG_NO_CODE_CHANGE -eq 1 ]; then
         echo "Allowed to deploy"
@@ -272,14 +311,7 @@ echo "Project:     $PROJECT_NAME"
 echo "Environment: $ENVIRONMENT"
 echo "Directory:   $BASE_PATH"
 echo "Branch:      $GIT_BRANCH"
-echo "Commit ID:   $LATEST_GIT_COMMIT_HASH"
-
-# If the --deploy flag is not set, cut the script
-if [ $FLAG_DEPLOY -eq 0 ]; then
-    echo "Missing '--deploy' flag"
-    echo "Will not be deployed"
-    exit 0
-fi
+echo "Commit ID:   $POST_MERGE_HEAD_COMMIT_HASH"
 
 echo ""
 echo "Ready for deployment!"

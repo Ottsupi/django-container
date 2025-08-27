@@ -19,6 +19,8 @@
     -   django-debug-toolbar
     -   django-extensions
 -   Add tailwindcss
+-   Deployment script added
+-   Database backup script added
 
 ## Todo
 
@@ -27,20 +29,28 @@
 -   Add alpine.js
 -   Setup redis
 -   Setup automatic database backups
--   Add deployment script
--   `${ENVIRONMENT}` should be `"dev"` during development
-    because `"local"` can be a deployment environment
+-   Setup logging to file
+-   Revisit `uv` package manager
+-   Use templates for `.vscode/` config files instead and generate it with `release.dev.sh`
+-   Add debugging (check it in `brgy-ms` repo branch)
 
 ## How to use in development
 
-0. Rename directory and the dev container in `.devcontainer/devcontainer.json`
-1. Configure your own `.env` file from `.env.sample`
-2. Open in VS Code using Dev Containers
+1. Rename directory and the dev container in `.devcontainer/devcontainer.json`
+2. Manually configure your own `.env` file from `.env.sample`
+3. Run `./release.dev.sh` to check and generate the required files
+4. Open in VS Code using Dev Containers
     - Altenatively, run `docker compose -f compose.dev.yaml up`
       to start the development environment. Then, attach your editor
       to the `${PROJECT_NAME}-develop` container.
-3. Install recommended extensions
-4. Start development
+5. Install recommended extensions
+6. Start development
+
+## How to create your own deployments
+
+1. Set all configurations from `.env`
+2. Create a `compose.yaml` file to handle all services and its setup
+3. Create a `release.env.sh` to handle pre-deployment checks, setup, and `git pull`
 
 ## How to do deployments
 

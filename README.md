@@ -16,6 +16,7 @@
 -   Use argon2
 -   Static files served by Whitenoise
 -   Add Django development tools:
+    -   django-browser-reload
     -   django-debug-toolbar
     -   django-extensions
 -   Add tailwindcss
@@ -31,8 +32,6 @@
 -   Setup automatic database backups
 -   Setup logging to file
 -   Revisit `uv` package manager
--   Use templates for `.vscode/` config files instead and generate it with `release.dev.sh`
--   Add debugging (check it in `brgy-ms` repo branch)
 
 ## How to use in development
 

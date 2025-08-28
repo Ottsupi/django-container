@@ -29,6 +29,11 @@ BASH_HISTORY_TEMPLATE="$BASE_PATH/.devcontainer/bash_history.template"
 BASHRC_FILE="$BASE_PATH/.devcontainer/.bashrc"
 BASHRC_TEMPLATE="$BASE_PATH/.devcontainer/bashrc.template.sh"
 
+VSC_EXTENSIONS_FILE="$BASE_PATH/.vscode/extensions.json"
+VSC_EXTENSIONS_TEMPLATE="$BASE_PATH/.vscode/extensions.template.jsonc"
+VSC_SETTINGS_FILE="$BASE_PATH/.vscode/settings.json"
+VSC_SETTINGS_TEMPLATE="$BASE_PATH/.vscode/settings.template.jsonc"
+
 TOTAL_STEPS=2
 CURRENT_STEP=0
 SOLUTIONS=()
@@ -58,7 +63,7 @@ fi
 
 
 ((CURRENT_STEP++))
-echo "[$CURRENT_STEP/$TOTAL_STEPS] Checking bash files..."
+echo "[$CURRENT_STEP/$TOTAL_STEPS] Checking files..."
 if [ -f $BASH_HISTORY_FILE ]; then
     echo "  ✓  .bash_history found"
 else
@@ -71,6 +76,20 @@ if [ -f $BASHRC_FILE ]; then
 else
     cp $BASHRC_TEMPLATE $BASHRC_FILE
     echo "  ✓  created .bashrc from template"
+fi
+
+if [ -f $VSC_SETTINGS_FILE ]; then
+    echo "  ✓  vscode settings.json found"
+else
+    cp $VSC_SETTINGS_TEMPLATE $VSC_SETTINGS_FILE
+    echo "  ✓  created vscode settings.json from template"
+fi
+
+if [ -f $VSC_EXTENSIONS_FILE ]; then
+    echo "  ✓  vscode extensions.json found"
+else
+    cp $VSC_EXTENSIONS_TEMPLATE $VSC_EXTENSIONS_FILE
+    echo "  ✓  created .vscode extensions.json from template"
 fi
 
 if [[ "${#SOLUTIONS[@]}" -gt 0 ]]; then

@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
+    # Third-party apps
+    "allauth",
+    "allauth.account",
     # Local apps
     "apps.app",
 ]
@@ -66,6 +69,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 if DEBUG:
@@ -105,6 +109,23 @@ DATABASES = {
         "PORT": "5432",
     },
 }
+
+
+# Email
+# https://docs.djangoproject.com/en/5.2/topics/email/
+
+if DEBUG:
+    # Send emails to console if in debug mode
+    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+
+# Authentication
+# https://docs.allauth.org/en/latest/installation/quickstart.html
+
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",  # Needed to login by username in Django admin
+    "allauth.account.auth_backends.AuthenticationBackend",  # `allauth` specific authentication methods
+]
 
 
 # Password validation

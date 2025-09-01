@@ -39,7 +39,7 @@
 2. Manually configure your own `.env` file from `.env.sample`
 3. Run `./release.dev.sh` to check and generate the required files
 4. Open in VS Code using Dev Containers
-    - Altenatively, run `docker compose -f compose.dev.yaml up`
+    - Alternatively, run `docker compose -f compose.dev.yaml up`
       to start the development environment. Then, attach your editor
       to the `${PROJECT_NAME}-develop` container.
 5. Install recommended extensions
@@ -188,17 +188,20 @@ Generally:
 ## Troubleshooting localhost SSL errors
 
 -   If using containers, make sure port `443` is exposed
+-   Learn the correct configuration for the kind of certificate you need
+    -   Root CA and Server certificates need different configs
 -   Make sure to add certificate to trust stores
 -   Make sure to use different Distinguished Names for the `root_ca` and `server` certificates
 -   Some browsers may complain about a certificate signed by a well-known certificate authority, while other browsers may accept the certificate without issues. See SSL certificate chains section in the NGINX docs: https://nginx.org/en/docs/http/configuring_https_servers.html
 -   `ERR_SSL_KEY_USAGE_INCOMPATIBLE`
-    -   `keyUsage` must have `critical, digitalSignature, keyEncipherment`
+    -   Server certificate `keyUsage` must have `critical, digitalSignature, keyEncipherment`
     -   https://superuser.com/a/738644
     -   https://stackoverflow.com/q/15123152
 -   `SEC_ERROR_INADEQUATE_KEY_USAGE`
-    -   `keyUsage` must have `critical, digitalSignature, cRLSign, keyCertSign`
+    -   Root CA certificate's `keyUsage` must have `critical, digitalSignature, cRLSign, keyCertSign`
 -   ```
-    nginx: [emerg] cannot load certificate key "/etc/ssl/private/server.key": PEM_read_bio_PrivateKey() failed (SSL: error:1E08010C:DECODER routines::unsupported:No supported data to decode. Input type: PEM)
+    nginx: [emerg] cannot load certificate key "/etc/ssl/private/server.key": PEM_read_bio_PrivateKey() failed 
+           (SSL: error:1E08010C:DECODER routines::unsupported:No supported data to decode. Input type: PEM)
     ```
     -   In my case, the `server.key` in the NGINX container had a file size of 0 bytes. Docker failed to copy the key due to insufficient permissions. Fix by adding read permissions `chmod +r server.key`
 
@@ -236,6 +239,20 @@ Generally:
         echo "KEY contains the characters \\ \$ \" '"
     fi
     ```
+
+## django-allauth
+
+-   Make sure to configure `EMAIL_BACKEND` when encountering connection errors
+-   Figure out how to customize the templates
+
+### Installation
+
+1. Install `django-allauth`
+2. Add to `INSTALLED_APPS`
+3. Configure `TEMPLATES`
+4. Configure `AUTHENTICATION_BACKENDS`
+5. Configure `MIDDLEWARE`
+6. Configure `EMAIL_BACKEND`
 
 # Issues encountered
 

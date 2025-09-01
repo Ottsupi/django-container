@@ -117,6 +117,15 @@ DATABASES = {
 if DEBUG:
     # Send emails to console if in debug mode
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+else:
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    DEFAULT_FROM_EMAIL = env("DJ_DEFAULT_FROM_EMAIL")
+    EMAIL_HOST = env("DJ_EMAIL_HOST")
+    EMAIL_PORT = env("DJ_EMAIL_PORT")
+    EMAIL_HOST_USER = env("DJ_EMAIL_HOST_USER")
+    EMAIL_HOST_PASSWORD = env("DJ_EMAIL_HOST_PASSWORD")
+    EMAIL_USE_TLS = env.bool("DJ_EMAIL_USE_TLS")
+    EMAIL_USE_SSL = env.bool("DJ_EMAIL_USE_SSL")
 
 
 # Authentication

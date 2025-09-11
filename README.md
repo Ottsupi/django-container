@@ -12,14 +12,16 @@
 
 ## What's been done
 
+-   Setup TailwindCSS
+-   Setup django-allauth
 -   Use psycopg[c]
 -   Use argon2
 -   Static files served by Whitenoise
+-   Media files in `src/media/` served by Django on debug mode
 -   Add Django development tools:
     -   django-browser-reload
     -   django-debug-toolbar
     -   django-extensions
--   Add tailwindcss
 -   Deployment script added
 -   Database backup script added
 
@@ -43,7 +45,14 @@
       to start the development environment. Then, attach your editor
       to the `${PROJECT_NAME}-develop` container.
 5. Install recommended extensions
-6. Start development
+6. Open a terminal and run these commands from `Makefile` to initialize the Django app
+    ```
+    make install
+    make migrations
+    make migrate
+    make run
+    ```
+7. For debugging, `launch.json` is provided for VS Code's "Run and Debug"
 
 ## How to create your own deployments
 
@@ -65,9 +74,7 @@
 -   The dev environment is defined by `compose.dev.yaml`
     -   Development is done inside the container `${PROJECT_NAME}-develop`
     -   On windows, it is recommended to have your project files inside WSL
-    -   There is a container for `@tailwind-cli` that watches for file changes
-        and deposits the output directly to the `STATIC_ROOT` because otherwise,
-        we will need to run `collectstatic` every time
+-   There is a container running `@tailwind-cli` that watches for file changes and outputs `src/assets/global.css`
 -   There is only one `settings.py`
     -   Configurations are done through environment variables
     -   `DEBUG` depends on `${ENVIRONMENT}`
@@ -75,9 +82,9 @@
 
 ### Issues
 
--   In case pylance does not work, do VS Code "Reload window"
--   Problems? Do VS Code "Rebuild and reopen in container" (you will need to
-    reinstall the extensions)
+-   Pylance does not work? Do VS Code "Reload window"
+-   Packages not detected? Do VS Code "Python: Select Interpreter" and select the correct interpreter
+-   Other problems? Do VS Code "Rebuild and reopen in container" (you will need to reinstall the extensions)
 
 ## Understanding the deployment process
 
@@ -97,7 +104,7 @@
         - Copy `requirements/requirements.txt` to `.`
         - Install the packages found in `requirements.txt`
         - Copy `src/*` to `.`
-        - Copy the `global.css` into the `assets/` directory to be collected at runtime
+        - Copy the `global.css` into the `assets/` directory to be collected on container entrypoint
         - Final image contains only the necessary files: `requirements.txt` `src/*` `global.css`
 4. Django container is started with `src/entrypoint.sh`
     - Applies database migrations
@@ -179,11 +186,10 @@ Generally:
         - `server.crt`
         - `server.srl`
 
-4. (Optional) Grant read access to the key
+4. (Optional) Grant read access to the key. In some cases, docker cannot copy the file due to missing permissions
     ```sh
         chmod +r server.key
     ```
-    - In some cases, docker cannot copy the file because of missing permissions
 
 ## Troubleshooting localhost SSL errors
 
@@ -192,7 +198,9 @@ Generally:
     -   Root CA and Server certificates need different configs
 -   Make sure to add certificate to trust stores
 -   Make sure to use different Distinguished Names for the `root_ca` and `server` certificates
--   Some browsers may complain about a certificate signed by a well-known certificate authority, while other browsers may accept the certificate without issues. See SSL certificate chains section in the NGINX docs: https://nginx.org/en/docs/http/configuring_https_servers.html
+-   Some browsers may complain about a certificate signed by a well-known certificate authority, while other browsers 
+    may accept the certificate without issues. See SSL certificate chains section in the NGINX docs:
+    https://nginx.org/en/docs/http/configuring_https_servers.html
 -   `ERR_SSL_KEY_USAGE_INCOMPATIBLE`
     -   Server certificate `keyUsage` must have `critical, digitalSignature, keyEncipherment`
     -   https://superuser.com/a/738644
@@ -203,7 +211,8 @@ Generally:
     nginx: [emerg] cannot load certificate key "/etc/ssl/private/server.key": PEM_read_bio_PrivateKey() failed 
            (SSL: error:1E08010C:DECODER routines::unsupported:No supported data to decode. Input type: PEM)
     ```
-    -   In my case, the `server.key` in the NGINX container had a file size of 0 bytes. Docker failed to copy the key due to insufficient permissions. Fix by adding read permissions `chmod +r server.key`
+    -   In my case, the `server.key` in the NGINX container had a file size of 0 bytes. Docker failed to copy the key 
+        due to insufficient permissions. Fix by adding read permissions `chmod +r server.key`
 
 ## Tips for learning NGINX
 

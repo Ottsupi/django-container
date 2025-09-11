@@ -13,6 +13,9 @@ database/*
 # node
 node_modules/
 
+# TailwindCSS
+src/assets/global.css
+
 # Logs
 src/logs/*
 !src/logs/.gitkeep

@@ -57,7 +57,7 @@ fi
 if [[ "$DEV_CONTAINER_GID" == "$(id -g)" ]]; then
     echo "  ✓  DEV_CONTAINER_GID matches current user's group id"
 else
-    echo "  ✗  DEV_CONTAINER_UID does NOT match current user's group id"
+    echo "  ✗  DEV_CONTAINER_GID does NOT match current user's group id"
     SOLUTIONS+=("Get user id with the command 'id -g'")
 fi
 
@@ -89,7 +89,7 @@ if [ -f $VSC_EXTENSIONS_FILE ]; then
     echo "  ✓  vscode extensions.json found"
 else
     cp $VSC_EXTENSIONS_TEMPLATE $VSC_EXTENSIONS_FILE
-    echo "  ✓  created .vscode extensions.json from template"
+    echo "  ✓  created vscode extensions.json from template"
 fi
 
 if [[ "${#SOLUTIONS[@]}" -gt 0 ]]; then

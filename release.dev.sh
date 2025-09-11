@@ -25,7 +25,6 @@ echo "Directory:   $BASE_PATH"
 echo ""
 
 BASH_HISTORY_FILE="$BASE_PATH/.devcontainer/.bash_history"
-BASH_HISTORY_TEMPLATE="$BASE_PATH/.devcontainer/bash_history.template"
 BASHRC_FILE="$BASE_PATH/.devcontainer/.bashrc"
 BASHRC_TEMPLATE="$BASE_PATH/.devcontainer/bashrc.template.sh"
 
@@ -67,7 +66,7 @@ echo "[$CURRENT_STEP/$TOTAL_STEPS] Checking files..."
 if [ -f $BASH_HISTORY_FILE ]; then
     echo "  ✓  .bash_history found"
 else
-    cp $BASH_HISTORY_TEMPLATE $BASH_HISTORY_FILE
+    touch $BASH_HISTORY_FILE
     echo "  ✓  created empty .bash_history"
 fi
 

@@ -19,6 +19,7 @@
         "yzhang.markdown-all-in-one",
         "charliermarsh.ruff",
         "monosans.djlint",
+        "bradlc.vscode-tailwindcss",
         // visuals
         "aaron-bond.better-comments",
         "Gruntfuggly.todo-tree"

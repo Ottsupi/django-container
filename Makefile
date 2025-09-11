@@ -4,6 +4,9 @@ MANAGE = $(CD_SRC) python manage.py
 
 .PHONY: run migrations migrate superuser static app shell urls
 
+install:
+	pip install --no-cache-dir -r requirements/requirements.dev.txt
+
 run:
 	$(MANAGE) runserver_plus 0.0.0.0:8000
 

@@ -1,15 +1,18 @@
 import logging
 
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 
 logger = logging.getLogger(__name__)
 
 
-def index(request):
+def index(request: HttpRequest):
     logger.debug("Accessed Hello world! view")
 
-    message = "Hello world!"
+    message = "Hello World!"
+    if request.user.is_authenticated:
+        message = f"Hello {request.user.username}!"
+
     context = {
         "message": message,
     }
@@ -17,5 +20,5 @@ def index(request):
     return render(request, "app/home.html", context)
 
 
-def health_check(request):
+def health_check():
     return HttpResponse(status=200)

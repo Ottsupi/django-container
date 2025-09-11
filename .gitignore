@@ -21,6 +21,10 @@ src/logs/*
 src/static/*
 !src/static/.gitkeep
 
+# Media files
+src/media/*
+!src/media/.gitkeep
+
 # Keys and certificates
 *.key
 *.crt

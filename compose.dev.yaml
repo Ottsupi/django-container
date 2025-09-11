@@ -1,6 +1,7 @@
 name: ${PROJECT_NAME}
 services:
   develop:
+    hostname: develop
     build:
       context: .
       dockerfile: ./docker/dev/app.Dockerfile

@@ -17,7 +17,7 @@ def index(request: HttpRequest):
         "message": message,
     }
 
-    return render(request, "app/home.html", context)
+    return render(request, "apps/app/home.html", context)
 
 
 def health_check():

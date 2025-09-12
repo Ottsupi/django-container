@@ -16,9 +16,22 @@
     <link rel="stylesheet" href="{% static "global.css" %}">
   </head>
   <body>
-    {% block content %}
-      <h1>You are in base template.</h1>
-      <h2>Content is missing</h2>
-    {% endblock content %}
+    {% block layout %}
+      <div class="h-screen flex flex-col items-center justify-center p-5">
+        <h1 class="text-5xl text-center mb-4">
+          This is template <code class="text-lime-700">base.html</code>
+        </h1>
+        <h2 class="text-4xl text-center">
+          Missing block
+          <code class="text-red-700">
+            {# djlint:off #}
+            {% verbatim %}
+              {%&nbsp;layout&nbsp;%}
+            {% endverbatim %}
+            {# djlint:on #}
+          </code>
+        </h2>
+      </div>
+    {% endblock layout %}
   </body>
 </html>

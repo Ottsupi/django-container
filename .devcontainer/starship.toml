@@ -1,0 +1,13 @@
+add_newline = true
+
+format = """
+$directory\
+$git_branch\
+$git_status\
+$line_break\
+$character"""
+
+# Character / Prompt symbol at the end
+[character]
+success_symbol = "[>](bold green)"
+error_symbol = "[>](bold red)"

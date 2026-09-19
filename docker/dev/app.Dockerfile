@@ -1,4 +1,4 @@
-FROM python:3.12
+FROM python:3.14
 
 ARG DEV_CONTAINER_UID
 ARG DEV_CONTAINER_GID
@@ -27,7 +27,7 @@ RUN apt install -y --no-install-recommends \
     build-essential \
     libpq-dev 
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir psycopg[c]==3.2.*
+RUN pip install --no-cache-dir psycopg[c]==3.3.*
 # ^This takes a while so install it earlier for cache
 
 

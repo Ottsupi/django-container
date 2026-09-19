@@ -1,8 +1,8 @@
 -r requirements.txt
 
 # Dev
-django-browser-reload==1.18.*
-django-debug-toolbar==6.0.*
+django-browser-reload==1.21.*
+django-debug-toolbar==8.0.*
 django-extensions==4.1.*
-djlint==1.36.*
+djlint==1.46.*
 werkzeug==3.1.*

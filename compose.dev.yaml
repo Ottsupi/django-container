@@ -20,11 +20,11 @@ services:
       - database
 
   database:
-    image: postgres:17
+    image: postgres:18
     env_file:
       - ./.env
     volumes:
-      - database-data:/var/lib/postgresql/data
+      - database-data:/var/lib/postgresql
 
   tailwind:
     build:

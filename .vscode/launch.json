@@ -9,7 +9,7 @@
             "type": "debugpy",
             "request": "launch",
             "program": "${workspaceFolder}/src/manage.py",
-            "args": ["runserver_plus", "5678"],
+            "args": ["runserver_plus", "0.0.0.0:8000"],
             "django": true
         }
     ]

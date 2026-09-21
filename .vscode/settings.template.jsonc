@@ -45,5 +45,6 @@
         "django-html": "html",
         "jinja-html": "html"
     },
-    "cSpell.words": []
+    "cSpell.words": [],
+    "python.analysis.typeCheckingMode": "standard"
 }

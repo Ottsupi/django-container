@@ -2,11 +2,11 @@
 
 ## Features
 
--   Django 5.2
--   Tailwind 4.1
--   Postgres 17
+-   Django 6.1
+-   Tailwind 4.3
+-   Postgres 18
 -   Whitenoise
--   Gunicorn 23
+-   Gunicorn 26
 -   Nginx
 -   Dev Container
 
@@ -34,6 +34,7 @@
 -   Setup automatic database backups
 -   Setup logging to file
 -   Revisit `uv` package manager
+-   Add docs
 
 ## How to use in development
 

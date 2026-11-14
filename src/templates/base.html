@@ -12,6 +12,27 @@
     <!-- Metadata -->
     <meta name="description" content="">
     <meta name="keywords" content="">
+    <script>
+      (function() {
+        const theme = localStorage.getItem('theme') || 'system';
+        const isSystemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        // Apply the dark class to prevent FOUC
+        if (theme === 'dark' || (theme === 'system' && isSystemDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+        // Store the initial system preference
+        localStorage.setItem('isSystemDark', isSystemDark);
+        // Listen for system theme changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+          localStorage.setItem('isSystemDark', event.matches);
+          if (theme === 'system') {
+            document.documentElement.classList.toggle('dark', event.matches);
+          }
+        });
+      })();
+    </script>
     <!-- Styles -->
     <link rel="stylesheet" href="{% static "global.css" %}">
     <!-- Scripts -->

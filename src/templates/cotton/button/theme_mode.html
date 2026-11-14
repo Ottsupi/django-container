@@ -1,0 +1,63 @@
+<div x-data="{
+        theme: localStorage.getItem('theme') || 'system',
+        isSystemDark: localStorage.getItem('isSystemDark') === 'true',
+        init() {
+            // Watch for system dark mode changes
+            const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+            this.isSystemDark = mediaQuery.matches;
+            mediaQuery.addEventListener('change', (event) => {
+                this.isSystemDark = event.matches;
+                if (this.theme === 'system') {
+                    this.updateTheme();
+                }
+            });
+
+            // Set the initial theme
+            this.updateTheme();
+        },
+        updateTheme() {
+            const isDark = this.theme === 'dark' || (this.theme === 'system' && this.isSystemDark);
+            document.documentElement.classList.toggle('dark', isDark);
+        },
+        setTheme(newTheme) {
+            this.theme = newTheme;
+            localStorage.setItem('theme', newTheme);
+            this.updateTheme();
+            this.dropdownOpen = false; // Close dropdown after selection
+        },
+        toggleTheme() {
+            // Toggle between system theme and the opposite theme
+            if (this.theme === 'light') {
+              this.isSystemDark ? this.setTheme('system') : this.setTheme('dark');
+            } else if (this.theme === 'dark') {
+              this.isSystemDark ? this.setTheme('light') : this.setTheme('system');
+            } else  {
+              const isCurrentlyDark = document.documentElement.classList.contains('dark');
+              if (!isCurrentlyDark) {
+                this.isSystemDark ? this.setTheme('system') : this.setTheme('dark');
+              } else {
+                this.isSystemDark ? this.setTheme('light') : this.setTheme('system');
+              }
+            }
+        },
+        currentIcon() {
+            if (this.theme === 'light') return 'light';
+            if (this.theme === 'dark') return 'dark';
+            return 'system'; // For 'system', decide based on system preference
+        },
+        systemIconColor() {
+            return this.isSystemDark ? 'dark' : 'light';
+        }
+    }"
+     class="flex flex-row hover:cursor-pointer"
+     @click="toggleTheme()">
+  <template x-if="currentIcon() === 'dark'">
+    <c-icon.moon class="{{ class }}" />
+  </template>
+  <template x-if="currentIcon() === 'light'">
+    <c-icon.sun class="{{ class }}" />
+  </template>
+  <template x-if="currentIcon() === 'system'">
+    <c-icon.sun-moon class="{{ class }}" />
+  </template>
+</div>

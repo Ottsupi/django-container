@@ -3,7 +3,8 @@
   Home | {{ block.super }}
 {% endblock page_title %}
 {% block content %}
-  <div class="w-screen h-screen flex items-center justify-center">
+  <div class="w-screen h-screen flex flex-col items-center justify-center gap-4">
     <h1 class="text-8xl">{{ message }}</h1>
+    <c-button.theme-mode class="size-12 hover:stroke-md-primary transition-colors" />
   </div>
 {% endblock content %}

@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     # Third-party apps
     "allauth",
     "allauth.account",
+    "django_cotton",
     # Local apps
     "apps.app",
 ]

@@ -4,6 +4,7 @@ django-allauth==65.19.*
 django-environ==0.14.*
 gunicorn==26.2.*
 whitenoise==6.12.*
+django-cotton==0.9.*
 
 # This should already be installed from the app.Dockerfile
 # psycopg[c]==3.3.*

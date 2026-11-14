@@ -20,9 +20,11 @@
         "charliermarsh.ruff",
         "monosans.djlint",
         "bradlc.vscode-tailwindcss",
+        "adrianwilczynski.alpine-js-intellisense",
+        "pcbowers.alpine-intellisense",
+        "twentyforty.django-cotton",
         // visuals
         "aaron-bond.better-comments",
-        "Gruntfuggly.todo-tree"
     ],
     // List of extensions recommended by VS Code that should not be recommended for users of this workspace.
     "unwantedRecommendations": []

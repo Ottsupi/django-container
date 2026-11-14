@@ -46,5 +46,10 @@
         "jinja-html": "html"
     },
     "cSpell.words": [],
-    "python.analysis.typeCheckingMode": "standard"
+    "python.analysis.typeCheckingMode": "standard",
+    "djangoCotton.templatePaths": [
+        "templates/cotton",
+        "src/templates/cotton"
+    ],
+    "alpine-intellisense.settings.languageScopes": "html,django-html"
 }

@@ -1,4 +1,4 @@
 <button type="button"
         x-data
         @click="$store.theme.toggleTheme()"
-        class="hover:cursor-pointer">{{ slot }}</button>
+        class="hover:cursor-pointer {{ class }}">{{ slot }}</button>

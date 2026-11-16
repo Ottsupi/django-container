@@ -5,14 +5,18 @@
 {% endblock page_title %}
 {% block layout %}
   <nav class="w-full border-b border-md-surface-variant bg-md-surface-container transition-colors">
-    <div class="mx-auto container flex flex-row justify-between items-center py-1">
+    <div class="mx-auto max-w-xl flex flex-row justify-between items-center px-2 py-2">
       <div class="flex flex-row items-center">
+        <button type="button" class="size-10 flex lg:hidden justify-center items-center">
+          <c-icon.left-panel />
+        </button>
+        <div class="block lg:hidden border-s-2 border-md-surface-variant h-8 mx-1 transition-colors" />
         <div class="flex flex-row items-center">
           <c-logo />
-          <c-logo-label />
+          <c-logo-label class="hidden md:block" />
         </div>
-        <div class="border-s-2 border-md-surface-variant h-8 ms-4 me-3 transition-colors" />
-        <div class="flex flex-row gap-2">
+        <div class="hidden lg:flex border-s-2 border-md-surface-variant h-8 ms-4 me-3 transition-colors" />
+        <div class="hidden lg:flex flex-row gap-2">
           <c-button.a>
             <c-icon.dashboard />
             Dashboard
@@ -31,15 +35,17 @@
           </c-button.a>
         </div>
       </div>
-      <div class="flex flex-row items-center gap-4">
-        <c-theme.button>
-          <c-theme.icon class="size-6" />
+      <div class="flex flex-row items-center gap-1">
+        <c-theme.button class="size-10 flex justify-center items-center">
+          <c-theme.icon class="size-5" />
         </c-theme.button>
-        <c-icon.bell class="size-6" />
+        <button type="button" class="size-10 flex justify-center items-center">
+        <c-icon.bell class="size-5" />
+        </button>
         <div class="flex flex-row items-center gap-2">
           <div class="flex flex-col items-end">
-            <span>Ottsupi.dev</span>
-            <span class="text-sm text-md-on-surface-variant -mt-1">Software Developer</span>
+            <span class="hidden md:block">Ottsupi.dev</span>
+            <span class="hidden md:block text-sm text-md-on-surface-variant -mt-1">Software Developer</span>
           </div>
           <img src="{% static "images/profile_picture.png" %}" alt="" class="size-10 rounded-xl">
         </div>

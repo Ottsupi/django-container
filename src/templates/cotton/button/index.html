@@ -1,0 +1,74 @@
+{# djlint:off H026 #}
+<c-vars
+  type="a"
+  class=""
+  bg="none"
+  :backgrounds="{
+    'none': '',
+    'primary': 'bg-md-primary text-md-on-primary',
+    'secondary': 'bg-md-secondary text-md-on-secondary',
+    'tertiary': 'bg-md-tertiary text-md-on-tertiary',
+    'surface': 'bg-md-surface text-md-on-surface',
+    'surface-container': 'bg-md-surface-container text-md-on-surface-container',
+    'surface-variant': 'bg-md-surface-variant text-md-on-surface-variant',
+    'error': 'bg-md-error text-md-on-error',
+    'error-container': 'bg-md-error-container text-md-on-error-container',
+  }"
+  hover="primary"
+  :hovers="{
+    'none': '',
+    'primary': 'hover:bg-md-primary hover:text-md-on-primary',
+    'secondary': 'hover:bg-md-secondary hover:text-md-on-secondary',
+    'tertiary': 'hover:bg-md-tertiary hover:text-md-on-tertiary',
+    'surface': 'hover:bg-md-surface hover:text-md-on-surface',
+    'surface-container': 'hover:bg-md-surface-container hover:text-md-on-surface-container',
+    'surface-variant': 'hover:bg-md-surface-variant hover:text-md-on-surface-variant',
+    'error': 'hover:bg-md-error hover:text-md-on-error',
+    'error-container': 'hover:bg-md-error-container hover:text-md-on-error-container',
+  }"
+  rounded="lg"
+  :rounded_sizes="{
+    'none': '',
+    'sm':   'rounded-sm',
+    'base': 'rounded',
+    'lg':   'rounded-lg',
+    'xl':   'rounded-xl',
+    'full': 'rounded-full',
+  }"
+  size="base"
+  :sizes="{
+    'xs':   'gap-1 px-2 py-2 text-xs',
+    'sm':   'gap-2 px-3 py-2 text-sm',
+    'base': 'gap-2 px-4 py-3',
+    'lg':   'gap-4 px-6 py-4 text-lg',
+    'xl':   'gap-6 px-8 py-6 text-xl',
+  }"
+/>
+
+{# Each dictionary should be on its own line to make sure whitespace is rendered between them. #}
+{# Otherwise, the last and first classes are combined. #}
+
+{% if type == 'a' %}
+<a {{ attrs }}
+   class="flex flex-row items-center hover:cursor-pointer transition-colors
+          {{ backgrounds|get_item:bg }}
+          {{ hovers|get_item:hover }}
+          {{ sizes|get_item:size }}
+          {{ rounded_sizes|get_item:rounded }}
+          {{ class }}"
+>
+  {{ slot }}
+</a>
+{% else %}
+<button {{ attrs }}
+        type="{{ type }}"
+        class="flex flex-row items-center hover:cursor-pointer transition-colors
+              {{ backgrounds|get_item:bg }}
+              {{ hovers|get_item:hover }}
+              {{ sizes|get_item:size }}
+              {{ rounded_sizes|get_item:rounded }}
+              {{ class }}"
+>
+  {{ slot }}
+</button>
+{% endif %}

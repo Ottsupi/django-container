@@ -9,7 +9,7 @@
       <div class="mx-auto max-w-xl flex flex-row justify-between items-center px-2 py-2">
         <div class="flex flex-row items-center">
           <button type="button"
-                  class="size-10 flex lg:hidden justify-center items-center"
+                  class="size-10 flex lg:hidden justify-center items-center cursor-pointer"
                   @click="sidebarOpen = true">
             <c-icon.left-panel />
           </button>
@@ -20,9 +20,22 @@
           </div>
           <div class="hidden lg:flex border-s-2 border-md-surface-variant h-8 ms-4 me-3 transition-colors"></div>
           <nav class="hidden lg:flex flex-row gap-3">
-            <span>thing</span>
-            <span>thing</span>
-            <span>thing</span>
+            <c-button>
+              <c-icon.dashboard />
+              Dashboard
+            </c-button>
+            <c-button>
+              <c-icon.users />
+              Members
+            </c-button>
+            <c-button>
+              <c-icon.wrench />
+              Services
+            </c-button>
+            <c-button>
+              <c-icon.chart />
+              Reports
+            </c-button>
           </nav>
         </div>
         <div class="flex flex-row items-center gap-1">
@@ -57,20 +70,38 @@
            x-transition:leave="transition ease-in duration-200"
            x-transition:leave-start="translate-x-0"
            x-transition:leave-end="-translate-x-full"
-           class="h-dvh w-64 md:w-xs fixed inset-0 z-50 flex flex-col bg-md-surface text-md-on-primary shadow-xl">
+           class="h-dvh w-64 md:w-xs fixed inset-0 z-50 flex flex-col bg-md-surface text-md-on-surface shadow-xl">
       <!-- Sidebar Header & Close Button -->
       <div class="flex flex-row items-center p-4">
         <c-logo />
         <c-logo-label class="text-md-on-surface" />
+        <button type="button"
+                class="size-10 flex lg:hidden justify-center items-center ms-auto cursor-pointer"
+                @click="sidebarOpen = false">
+          <c-icon.x />
+        </button>
       </div>
       <div class="w-full px-4 mb-4">
         <div class="block lg:hidden border-b-2 border-md-surface-variant w-full transition-colors"></div>
       </div>
       <!-- Navigation Links -->
       <nav class="flex flex-col">
-        <span>thing</span>
-        <span>thing</span>
-        <span>thing</span>
+        <c-button hover="surface-container" rounded="none" class="ps-4">
+          <c-icon.dashboard />
+          Dashboard
+        </c-button>
+        <c-button hover="surface-container" rounded="none" class="ps-4">
+          <c-icon.users />
+          Members
+        </c-button>
+        <c-button hover="surface-container" rounded="none" class="ps-4">
+          <c-icon.wrench />
+          Services
+        </c-button>
+        <c-button hover="surface-container" rounded="none" class="ps-4">
+          <c-icon.chart />
+          Reports
+        </c-button>
       </nav>
     </aside>
   </div>

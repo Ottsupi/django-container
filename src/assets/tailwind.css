@@ -122,3 +122,5 @@
         transition-duration: var(--tw-duration, var(--default-transition-duration) /* 150ms */);
     }
 }
+
+[x-cloak] { display: none !important; }

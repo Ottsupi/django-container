@@ -5,6 +5,20 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+    --breakpoint-*: initial;
+    --breakpoint-xs: 20rem;   /* 320px  */
+    --breakpoint-sm: 22.5rem; /* 360px  */
+    --breakpoint-md: 40rem;   /* 640px  */
+    --breakpoint-lg: 64rem;   /* 1024px */
+    --breakpoint-xl: 90rem;   /* 1440px */
+
+    --container-*: initial;
+    --container-xs: 20rem;    /* 320px  */
+    --container-sm: 22.5rem;  /* 360px  */
+    --container-md: 40rem;    /* 640px  */
+    --container-lg: 64rem;    /* 1024px */
+    --container-xl: 90rem;    /* 1440px */
+
     --color-md-primary: var(--md-sys-color-primary);
     --color-md-on-primary: var(--md-sys-color-on-primary);
     --color-md-primary-container: var(--md-sys-color-primary-container);

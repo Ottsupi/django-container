@@ -4,10 +4,11 @@
   {{ block.super }}
 {% endblock page_title %}
 {% block layout %}
-  <nav class="w-full border-b border-md-surface-variant bg-md-surface-container transition-colors">
-    <div class="mx-auto max-w-xl flex flex-row justify-between items-center px-2 py-2">
+  <header class="w-full border-b border-md-surface-variant bg-md-surface-container transition-colors">
+    <nav class="mx-auto max-w-xl flex flex-row justify-between items-center px-2 py-2">
       <div class="flex flex-row items-center">
-        <button type="button" class="size-10 flex lg:hidden justify-center items-center">
+        <button type="button"
+                class="size-10 flex lg:hidden justify-center items-center">
           <c-icon.left-panel />
         </button>
         <div class="block lg:hidden border-s-2 border-md-surface-variant h-8 mx-1 transition-colors" />
@@ -40,18 +41,20 @@
           <c-theme.icon class="size-5" />
         </c-theme.button>
         <button type="button" class="size-10 flex justify-center items-center">
-        <c-icon.bell class="size-5" />
+          <c-icon.bell class="size-5" />
         </button>
         <div class="flex flex-row items-center gap-2">
           <div class="flex flex-col items-end">
             <span class="hidden md:block">Ottsupi.dev</span>
             <span class="hidden md:block text-sm text-md-on-surface-variant -mt-1">Software Developer</span>
           </div>
-          <img src="{% static "images/profile_picture.png" %}" alt="" class="size-10 rounded-xl">
+          <img src="{% static "images/profile_picture.png" %}"
+               alt=""
+               class="size-10 rounded-xl">
         </div>
       </div>
-    </div>
-  </nav>
+    </nav>
+  </header>
   {% block content %}
     <div class="h-full flex flex-col items-center justify-center p-5">
       <h1 class="text-5xl text-center mb-4">

@@ -70,3 +70,41 @@
         transition-duration: 300ms;
     }
 }
+
+@layer components {
+    .logo {
+        width: 3rem;
+        height: 2rem;
+        margin: .5rem;
+        padding-bottom: .25rem;
+        background-color: var(--color-md-on-surface);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10%;
+        transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+        transition-timing-function: var(--tw-ease, var(--default-transition-timing-function) /* cubic-bezier(0.4, 0, 0.2, 1) */);
+        transition-duration: var(--tw-duration, var(--default-transition-duration) /* 150ms */);
+        .logo-text {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-md-surface);
+            user-select: none;
+            transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+            transition-timing-function: var(--tw-ease, var(--default-transition-timing-function) /* cubic-bezier(0.4, 0, 0.2, 1) */);
+            transition-duration: var(--tw-duration, var(--default-transition-duration) /* 150ms */);
+        }
+    }
+    .logo-label {
+        padding-bottom: .25rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--color-md-on-surface);
+        user-select: none;
+        transition-property: color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to;
+        transition-timing-function: var(--tw-ease, var(--default-transition-timing-function) /* cubic-bezier(0.4, 0, 0.2, 1) */);
+        transition-duration: var(--tw-duration, var(--default-transition-duration) /* 150ms */);
+    }
+}

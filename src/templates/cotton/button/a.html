@@ -1,0 +1,22 @@
+{% load app_filters %}
+
+<c-vars
+  variant="default"
+  :variants="{
+    'default': 'bg-transparent hover:bg-md-primary hover:text-md-on-primary',
+  }"
+  size="default"
+  :sizes="{
+    'default': 'gap-1 px-2 py-2 [&>svg]:size-5',
+  }"
+/>
+
+{# Each dictionary should be on its own line to make sure whitespace is rendered between them. #}
+{# Otherwise, the last and first classes are combined. #}
+<a class="flex flex-row items-center rounded-lg hover:cursor-pointer transition-colors
+          {{ variants|get_item:variant }}
+          {{ sizes|get_item:size }}
+          {{ class }}
+">
+  {{ slot }}
+</a>
